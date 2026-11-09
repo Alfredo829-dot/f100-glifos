@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#0b0f14"/>
+<title>F100 — Glifos para edición de fotos</title>
+<style>
+:root {
+  --bg: #0b0f14;
+  --panel: #141a22;
+  --panel2: #1a2230;
+  --text: #e8eef7;
+  --muted: #9aa8bc;
+  --accent: #5eead4;
+  --accent2: #93c5fd;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  --ok: #86efac;
+  --border: #2a3545;
+  --chip: #243044;
+  --radius: 14px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--font); }
+body { min-height: 100dvh; padding: 12px 12px 40px; }
+h1 { font-size: 1.45rem; margin: 8px 0 4px; letter-spacing: 0.02em; }
+h2 { font-size: 1.1rem; margin: 18px 0 8px; color: var(--accent2); }
+p, li { font-size: 1rem; line-height: 1.45; color: var(--muted); }
+.sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 14px; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 1.05rem; }
+textarea, input[type=text], input[type=search] {
+  width: 100%;
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+textarea { min-height: 110px; resize: vertical; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+button, .btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--chip);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+button.primary { background: #134e4a; border-color: #2dd4bf; color: #ecfeff; }
+button.ghost { background: transparent; }
+button:active { transform: scale(0.98); }
+.out {
+  background: #0a121a;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 1.05rem;
+  color: var(--text);
+  min-height: 48px;
+}
+.out strong { color: var(--accent); display: block; margin-bottom: 4px; font-size: 0.9rem; }
+.toast {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+  background: #064e3b; color: #ecfdf5; padding: 10px 16px; border-radius: 999px;
+  font-weight: 700; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 50;
+}
+.toast.show { opacity: 1; }
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 8px; }
+.tab {
+  flex: 0 0 auto; padding: 10px 14px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--panel2); color: var(--muted); font-weight: 700; font-size: 0.95rem;
+}
+.tab.active { background: #1e3a5f; color: #dbeafe; border-color: #60a5fa; }
+.glyph-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.glyph {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center;
+  background: var(--panel2); border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+  cursor: pointer;
+}
+.glyph .sym { font-size: 1.6rem; min-width: 2.4rem; text-align: center; }
+.glyph .meta b { display: block; color: var(--text); font-size: 1.02rem; }
+.glyph .meta span { color: var(--muted); font-size: 0.92rem; }
+.glyph .add { color: var(--accent); font-weight: 800; }
+.chain-bar {
+  position: sticky; top: 0; z-index: 20; background: rgba(11,15,20,.92); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border); padding: 8px 0 10px; margin: -12px -12px 12px; padding-left: 12px; padding-right: 12px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 36px; }
+.chip {
+  background: #123; border: 1px solid #2dd4bf55; color: #ccfbf1; border-radius: 999px;
+  padding: 8px 12px; font-size: 1.05rem; font-weight: 700;
+}
+.chip button { margin-left: 6px; padding: 0; border: 0; background: transparent; color: var(--danger); font-size: 1rem; }
+.preset {
+  display: block; width: 100%; text-align: left; border-radius: 12px; margin-bottom: 8px;
+  background: var(--panel2); border: 1px solid var(--border); padding: 12px;
+}
+.preset b { color: var(--accent2); display: block; margin-bottom: 4px; }
+.fav-item { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin-bottom: 8px; }
+.fav-item code { font-size: 0.95rem; color: var(--ok); white-space: pre-wrap; word-break: break-word; }
+.note { font-size: 0.95rem; color: var(--warn); }
+details summary { cursor: pointer; font-weight: 700; color: var(--accent2); font-size: 1.05rem; padding: 6px 0; }
+code.inline { color: var(--ok); }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="chain-bar">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+    <h1 style="margin:0;font-size:1.2rem;">F100 · edición de fotos</h1>
+    <button class="ghost" id="btnClearChain" type="button">Limpiar</button>
+  </div>
+  <div class="chips" id="chainChips" aria-label="Cadena actual"></div>
+</div>
+
+<p class="sub">Escribe en español lo que quieres editar. La app arma glifos + prompt para copiar y pegar. Sin IA, todo local.</p>
+
+<section class="card">
+  <label for="want">Dime qué quieres</label>
+  <textarea id="want" placeholder="Ej: misma persona, cambia la ropa a vestido rojo elegante, pose sentada, luz de atardecer"></textarea>
+  <div class="row">
+    <button class="primary" id="btnMatch" type="button">Armar glifos</button>
+    <button id="btnAddColor" type="button">+ color…</button>
+  </div>
+  <div class="out" id="outChain"><strong>Cadena</strong><span id="chainText">—</span></div>
+  <div class="out" id="outEs"><strong>Prompt ES</strong><span id="esText">—</span></div>
+  <div class="out" id="outEn"><strong>Prompt EN</strong><span id="enText">—</span></div>
+  <div class="row">
+    <button id="btnCopyChain" type="button">Copiar glifos</button>
+    <button id="btnCopyPrompt" type="button">Copiar prompt</button>
+    <button class="primary" id="btnCopyBoth" type="button">Copiar ambos</button>
+    <button id="btnSaveFav" type="button">★ Guardar</button>
+  </div>
+  <p class="note" id="matchNote"></p>
+</section>
+
+<section class="card">
+  <h2 style="margin-top:0;">Presets listos</h2>
+  <div id="presets"></div>
+</section>
+
+<section class="card">
+  <h2 style="margin-top:0;">Explorar glifos</h2>
+  <input type="search" id="search" placeholder="Buscar: vestido, luz, pose…"/>
+  <div class="tabs" id="famTabs"></div>
+  <div class="glyph-grid" id="glyphGrid"></div>
+</section>
+
+<section class="card">
+  <h2 style="margin-top:0;">Favoritos / cadenas guardadas</h2>
+  <div id="favs">Sin favoritos aún.</div>
+</section>
+
+<section class="card">
+  <details open>
+    <summary>Cómo usar</summary>
+    <ol>
+      <li>Escribe lo que quieres en <b>Dime qué quieres</b> o toca glifos del catálogo.</li>
+      <li>Copia la <b>cadena</b> y/o el <b>prompt expandido</b>.</li>
+      <li>Pégalo en Gemini / ChatGPT / Grok Image junto con tu foto de referencia.</li>
+      <li>Gramática: <code class="inline">A ; B</code>, <code class="inline">par(A,B)</code>, <code class="inline">si(cond,A,B)</code>, <code class="inline">repetir(n,A)</code>.</li>
+      <li><b>Importante:</b> otros modelos no “saben” F100 solos. Pégales el prompt expandido o el diccionario.</li>
+      <li>Límites: tasteful; sin desnudez; sin menores; sin quitar ropa; sin suplantar personas reales. «Atrevido» = moda fashion-forward refinada.</li>
+      <li>Bases distintas a G100 para no chocar: ● ■ ▲ ◆ ⬢ ⊛ ⊠ ▣ ⊗ ◍</li>
+    </ol>
+  </details>
+</section>
+
+<div class="toast" id="toast">Copiado</div>
+
+<script>
+const CATALOG = [{"id": "F01", "symbol": "●₀", "family": "identidad", "family_label": "Identidad / preservación", "name": "Misma-persona", "meaning": "Conservar la misma identidad de persona de la foto de referencia", "expand_es": "misma persona, conservar identidad exacta del sujeto de referencia", "expand_en": "same person, preserve exact identity of the reference subject", "keywords": ["misma persona", "misma gente", "identidad", "same person", "conservar persona", "no cambiar persona"]}, {"id": "F02", "symbol": "●₁", "family": "identidad", "family_label": "Identidad / preservación", "name": "Misma-cara", "meaning": "Conservar los rasgos faciales exactos", "expand_es": "misma cara, conservar rasgos faciales exactos", "expand_en": "same face, keep exact facial features", "keywords": ["misma cara", "mismo rostro", "cara igual", "rasgos", "same face"]}, {"id": "F03", "symbol": "●₂", "family": "identidad", "family_label": "Identidad / preservación", "name": "Mismo-cuerpo", "meaning": "Conservar proporciones corporales del sujeto", "expand_es": "mismo cuerpo, conservar proporciones corporales", "expand_en": "same body, preserve body proportions", "keywords": ["mismo cuerpo", "proporciones", "cuerpo igual", "same body"]}, {"id": "F04", "symbol": "●₃", "family": "identidad", "family_label": "Identidad / preservación", "name": "Misma-pose", "meaning": "Mantener la pose original de la foto", "expand_es": "mantener la pose original", "expand_en": "keep the original pose", "keywords": ["misma pose", "mantener pose", "pose original", "keep pose", "mantener la pose"]}, {"id": "F05", "symbol": "●₄", "family": "identidad", "family_label": "Identidad / preservación", "name": "Mismo-fondo", "meaning": "Mantener el fondo original sin reemplazarlo", "expand_es": "mantener el fondo original", "expand_en": "keep the original background", "keywords": ["mismo fondo", "fondo original", "mantener fondo", "keep background"]}, {"id": "F06", "symbol": "●₅", "family": "identidad", "family_label": "Identidad / preservación", "name": "Misma-edad", "meaning": "Conservar la edad aparente del sujeto", "expand_es": "conservar la edad aparente del sujeto", "expand_en": "preserve the subject's apparent age", "keywords": ["misma edad", "edad aparente", "no rejuvenecer", "no envejecer"]}, {"id": "F07", "symbol": "●₆", "family": "identidad", "family_label": "Identidad / preservación", "name": "Mismo-gesto", "meaning": "Conservar la expresión facial", "expand_es": "conservar la expresión facial / gesto", "expand_en": "keep the facial expression", "keywords": ["mismo gesto", "misma expresion", "expresion facial", "sonrisa igual"]}, {"id": "F08", "symbol": "●₇", "family": "identidad", "family_label": "Identidad / preservación", "name": "Misma-composicion", "meaning": "Conservar encuadre y composición base", "expand_es": "conservar el encuadre y la composición base", "expand_en": "keep the base framing and composition", "keywords": ["misma composicion", "mismo encuadre", "composicion original"]}, {"id": "F09", "symbol": "●₈", "family": "identidad", "family_label": "Identidad / preservación", "name": "Solo-cambiar", "meaning": "Cambiar únicamente el elemento indicado; dejar el resto igual", "expand_es": "cambiar solo el elemento indicado; dejar todo lo demás igual", "expand_en": "change only the specified element; leave everything else unchanged", "keywords": ["solo cambiar", "cambiar solo", "unicamente", "nothing else", "solo la ropa", "solo el fondo", "solo cambiar el", "cambia la ropa", "cambiar la ropa"]}, {"id": "F10", "symbol": "●₉", "family": "identidad", "family_label": "Identidad / preservación", "name": "Sin-persona-real", "meaning": "No imitar ni suplantar a una celebridad o persona real conocida", "expand_es": "no imitar ni suplantar a celebridades ni personas reales conocidas", "expand_en": "do not impersonate celebrities or known real people", "keywords": ["sin celebridad", "no persona real", "no famosos", "sin suplantar"]}, {"id": "F11", "symbol": "■₀", "family": "ropa", "family_label": "Ropa / prendas", "name": "Camisa", "meaning": "Prenda superior tipo camisa", "expand_es": "usar camisa", "expand_en": "wear a shirt", "keywords": ["camisa", "shirt"]}, {"id": "F12", "symbol": "■₁", "family": "ropa", "family_label": "Ropa / prendas", "name": "Blusa", "meaning": "Prenda superior tipo blusa", "expand_es": "usar blusa", "expand_en": "wear a blouse", "keywords": ["blusa", "blouse"]}, {"id": "F13", "symbol": "■₂", "family": "ropa", "family_label": "Ropa / prendas", "name": "Vestido", "meaning": "Prenda tipo vestido", "expand_es": "usar vestido", "expand_en": "wear a dress", "keywords": ["vestido", "dress", "un vestido", "el vestido"]}, {"id": "F14", "symbol": "■₃", "family": "ropa", "family_label": "Ropa / prendas", "name": "Pantalon", "meaning": "Pantalón / jeans / trousers", "expand_es": "usar pantalón", "expand_en": "wear pants/trousers", "keywords": ["pantalon", "pantalones", "jeans", "trousers", "pants"]}, {"id": "F15", "symbol": "■₄", "family": "ropa", "family_label": "Ropa / prendas", "name": "Falda", "meaning": "Prenda tipo falda", "expand_es": "usar falda", "expand_en": "wear a skirt", "keywords": ["falda", "skirt"]}, {"id": "F16", "symbol": "■₅", "family": "ropa", "family_label": "Ropa / prendas", "name": "Chaqueta", "meaning": "Chaqueta o blazer", "expand_es": "usar chaqueta o blazer", "expand_en": "wear a jacket or blazer", "keywords": ["chaqueta", "blazer", "jacket", "saco"]}, {"id": "F17", "symbol": "■₆", "family": "ropa", "family_label": "Ropa / prendas", "name": "Abrigo", "meaning": "Abrigo o coat", "expand_es": "usar abrigo", "expand_en": "wear a coat", "keywords": ["abrigo", "coat", "gabardina"]}, {"id": "F18", "symbol": "■₇", "family": "ropa", "family_label": "Ropa / prendas", "name": "Sueter", "meaning": "Suéter, hoodie o sudadera", "expand_es": "usar suéter o sudadera", "expand_en": "wear a sweater or hoodie", "keywords": ["sueter", "sudadera", "hoodie", "sweater", "jersey"]}, {"id": "F19", "symbol": "■₈", "family": "ropa", "family_label": "Ropa / prendas", "name": "Calzado", "meaning": "Zapatos, tenis u otro calzado", "expand_es": "usar calzado adecuado al estilo", "expand_en": "wear footwear matching the style", "keywords": ["calzado", "zapatos", "tenis", "botas", "shoes", "sneakers"]}, {"id": "F20", "symbol": "■₉", "family": "ropa", "family_label": "Ropa / prendas", "name": "Accesorio", "meaning": "Accesorio tasteful: bolsa, cinturón, bufanda, joyería discreta", "expand_es": "añadir accesorio discreto (bolsa, cinturón, bufanda o joyería)", "expand_en": "add a tasteful accessory (bag, belt, scarf, or discreet jewelry)", "keywords": ["accesorio", "bolsa", "cinturon", "bufanda", "collar", "aretes", "joyeria", "bag", "belt"]}, {"id": "F21", "symbol": "▲₀", "family": "estilo", "family_label": "Estilo de ropa", "name": "Casual", "meaning": "Estilo casual cotidiano", "expand_es": "estilo de ropa casual cotidiano", "expand_en": "casual everyday clothing style", "keywords": ["casual", "diario", "cotidiano", "relajado ropa", "estilo casual"]}, {"id": "F22", "symbol": "▲₁", "family": "estilo", "family_label": "Estilo de ropa", "name": "Elegante", "meaning": "Estilo elegante o formal", "expand_es": "estilo de ropa elegante / formal", "expand_en": "elegant / formal clothing style", "keywords": ["elegante", "formal", "fino", "elegant", "dressy"]}, {"id": "F23", "symbol": "▲₂", "family": "estilo", "family_label": "Estilo de ropa", "name": "Atrevido-refinado", "meaning": "Estilo fashion-forward refinado (no sexual ni explícito)", "expand_es": "estilo atrevido-refinado, fashion-forward y pulido, sin contenido sexual", "expand_en": "fashion-forward refined style, polished and daring in fashion sense only, non-sexual", "keywords": ["atrevido", "atrevido refinado", "fashion forward", "audaz moda", "moderno atrevido"]}, {"id": "F24", "symbol": "▲₃", "family": "estilo", "family_label": "Estilo de ropa", "name": "Deportivo", "meaning": "Estilo deportivo o athleisure", "expand_es": "estilo deportivo / athleisure", "expand_en": "sporty / athleisure style", "keywords": ["deportivo", "sport", "athleisure", "gym", "fitness ropa"]}, {"id": "F25", "symbol": "▲₄", "family": "estilo", "family_label": "Estilo de ropa", "name": "Urbano", "meaning": "Estilo urbano / streetwear", "expand_es": "estilo urbano / streetwear", "expand_en": "urban / streetwear style", "keywords": ["urbano", "streetwear", "street", "city style", "urbana", "estilo urbano", "ropa urbana"]}, {"id": "F26", "symbol": "▲₅", "family": "estilo", "family_label": "Estilo de ropa", "name": "Minimalista", "meaning": "Estilo minimalista limpio", "expand_es": "estilo minimalista limpio", "expand_en": "clean minimalist style", "keywords": ["minimalista", "minimal", "simple limpio"]}, {"id": "F27", "symbol": "▲₆", "family": "estilo", "family_label": "Estilo de ropa", "name": "Vintage", "meaning": "Estilo vintage o retro", "expand_es": "estilo vintage / retro", "expand_en": "vintage / retro style", "keywords": ["vintage", "retro", "ochentas", "noventas", "70s", "80s", "90s"]}, {"id": "F28", "symbol": "▲₇", "family": "estilo", "family_label": "Estilo de ropa", "name": "Smart-casual", "meaning": "Smart casual equilibrado", "expand_es": "estilo smart casual", "expand_en": "smart-casual style", "keywords": ["smart casual", "semi formal", "business casual", "smart-casual", "estilo smart"]}, {"id": "F29", "symbol": "▲₈", "family": "estilo", "family_label": "Estilo de ropa", "name": "Oficina", "meaning": "Estilo de oficina / business", "expand_es": "estilo de oficina / business wear", "expand_en": "office / business wear style", "keywords": ["oficina", "business", "trabajo ropa", "corporativo"]}, {"id": "F30", "symbol": "▲₉", "family": "estilo", "family_label": "Estilo de ropa", "name": "Fiesta", "meaning": "Estilo de fiesta o noche tasteful", "expand_es": "estilo de fiesta / noche elegante y tasteful", "expand_en": "tasteful party / evening wear style", "keywords": ["fiesta", "noche", "gala", "cocktail", "evening"]}, {"id": "F31", "symbol": "◆₀", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Color-solido", "meaning": "Color sólido indicado (usar argumento de color)", "expand_es": "color sólido de la prenda según lo indicado", "expand_en": "solid garment color as specified", "keywords": ["color solido", "color ", "rojo", "azul", "verde", "negro", "blanco", "beige", "rosa", "morado", "amarillo", "naranja", "gris", "dorado", "plateado", "burgundy", "vino", "maroon", "navy", "celeste"]}, {"id": "F32", "symbol": "◆₁", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Algodon", "meaning": "Textura de algodón", "expand_es": "tela de algodón", "expand_en": "cotton fabric texture", "keywords": ["algodon", "cotton"]}, {"id": "F33", "symbol": "◆₂", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Denim", "meaning": "Textura denim / mezclilla", "expand_es": "tela denim / mezclilla", "expand_en": "denim fabric", "keywords": ["denim", "mezclilla", "jean tela"]}, {"id": "F34", "symbol": "◆₃", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Lana", "meaning": "Textura de lana", "expand_es": "tela de lana", "expand_en": "wool fabric texture", "keywords": ["lana", "wool", "tejido lana"]}, {"id": "F35", "symbol": "◆₄", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Seda", "meaning": "Textura de seda", "expand_es": "tela de seda", "expand_en": "silk fabric texture", "keywords": ["seda", "silk", "satin", "raso"]}, {"id": "F36", "symbol": "◆₅", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Cuero", "meaning": "Acabado tipo cuero de moda (no arma)", "expand_es": "acabado de cuero fashion", "expand_en": "fashion leather finish", "keywords": ["cuero", "leather", "piel sintetica"]}, {"id": "F37", "symbol": "◆₆", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Estampado", "meaning": "Estampado o print indicado", "expand_es": "con estampado / print", "expand_en": "with a print / pattern", "keywords": ["estampado", "print", "floral", "rayas", "cuadros", "lunares", "pattern"]}, {"id": "F38", "symbol": "◆₇", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Textura-fina", "meaning": "Detalle fino de textura de tela visible", "expand_es": "textura fina de tela visible", "expand_en": "fine visible fabric texture detail", "keywords": ["textura", "tela detallada", "fabric detail"]}, {"id": "F39", "symbol": "◆₈", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Paleta", "meaning": "Aplicar paleta de colores indicada", "expand_es": "aplicar paleta de colores coherente", "expand_en": "apply a coherent color palette", "keywords": ["paleta", "palette", "colores combinados", "esquema de color"]}, {"id": "F40", "symbol": "◆₉", "family": "material", "family_label": "Materiales / texturas / colores", "name": "Contraste-color", "meaning": "Enfatizar contraste de color entre prendas/fondo", "expand_es": "enfatizar contraste de color", "expand_en": "emphasize color contrast", "keywords": ["contraste color", "contrast color", "colores contrastantes"]}, {"id": "F41", "symbol": "⬢₀", "family": "postura", "family_label": "Posturas / poses", "name": "De-pie", "meaning": "Pose de pie", "expand_es": "pose de pie", "expand_en": "standing pose", "keywords": ["de pie", "parado", "standing", "ponerse de pie"]}, {"id": "F42", "symbol": "⬢₁", "family": "postura", "family_label": "Posturas / poses", "name": "Sentado", "meaning": "Pose sentada", "expand_es": "pose sentada", "expand_en": "sitting pose", "keywords": ["sentado", "sentada", "sitting", "silla"]}, {"id": "F43", "symbol": "⬢₂", "family": "postura", "family_label": "Posturas / poses", "name": "Caminando", "meaning": "Pose caminando / mid-stride", "expand_es": "pose caminando", "expand_en": "walking / mid-stride pose", "keywords": ["caminando", "camina", "walking", "paseando"]}, {"id": "F44", "symbol": "⬢₃", "family": "postura", "family_label": "Posturas / poses", "name": "Tres-cuartos", "meaning": "Giro corporal de tres cuartos", "expand_es": "cuerpo en tres cuartos", "expand_en": "three-quarter body turn", "keywords": ["tres cuartos", "3/4", "three quarter"]}, {"id": "F45", "symbol": "⬢₄", "family": "postura", "family_label": "Posturas / poses", "name": "Perfil", "meaning": "Pose de perfil", "expand_es": "pose de perfil", "expand_en": "profile pose", "keywords": ["perfil", "de lado", "profile", "side view"]}, {"id": "F46", "symbol": "⬢₅", "family": "postura", "family_label": "Posturas / poses", "name": "Mirada-camara", "meaning": "Mirando a la cámara", "expand_es": "mirando a la cámara", "expand_en": "looking at the camera", "keywords": ["mirada camara", "mirando a la camara", "looking at camera", "ojos a camara"]}, {"id": "F47", "symbol": "⬢₆", "family": "postura", "family_label": "Posturas / poses", "name": "Mirada-lado", "meaning": "Mirada hacia un lado", "expand_es": "mirada hacia un lado", "expand_en": "looking to the side", "keywords": ["mirada lado", "mirando al lado", "looking away", "mirada fuera"]}, {"id": "F48", "symbol": "⬢₇", "family": "postura", "family_label": "Posturas / poses", "name": "Manos-naturales", "meaning": "Manos en posición natural, sin rarezas", "expand_es": "manos en pose natural, sin deformaciones", "expand_en": "natural hand placement, no deformities", "keywords": ["manos naturales", "manos normales", "natural hands"]}, {"id": "F49", "symbol": "⬢₈", "family": "postura", "family_label": "Posturas / poses", "name": "Pose-editorial", "meaning": "Pose editorial de moda", "expand_es": "pose editorial de moda", "expand_en": "editorial fashion pose", "keywords": ["pose editorial", "editorial", "fashion pose", "moda pose"]}, {"id": "F50", "symbol": "⬢₉", "family": "postura", "family_label": "Posturas / poses", "name": "Pose-relajada", "meaning": "Pose relajada y natural", "expand_es": "pose relajada y natural", "expand_en": "relaxed natural pose", "keywords": ["pose relajada", "relajado", "natural pose", "chill pose"]}, {"id": "F51", "symbol": "⊛₀", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Plano-entero", "meaning": "Plano entero / cuerpo completo", "expand_es": "plano entero, cuerpo completo", "expand_en": "full-body shot", "keywords": ["plano entero", "cuerpo completo", "full body", "de pies a cabeza"]}, {"id": "F52", "symbol": "⊛₁", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Plano-medio", "meaning": "Plano medio (cintura arriba)", "expand_es": "plano medio", "expand_en": "medium shot (waist up)", "keywords": ["plano medio", "medium shot", "cintura arriba"]}, {"id": "F53", "symbol": "⊛₂", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Primer-plano", "meaning": "Primer plano de rostro / bust", "expand_es": "primer plano", "expand_en": "close-up (face / upper body)", "keywords": ["primer plano", "close up", "closeup", "retrato cercano"]}, {"id": "F54", "symbol": "⊛₃", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Plano-americano", "meaning": "Plano americano (rodillas arriba)", "expand_es": "plano americano", "expand_en": "cowboy / American shot (knees up)", "keywords": ["plano americano", "american shot", "rodillas arriba"]}, {"id": "F55", "symbol": "⊛₄", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Angulo-ojo", "meaning": "Ángulo a la altura de los ojos", "expand_es": "ángulo a la altura de los ojos", "expand_en": "eye-level camera angle", "keywords": ["angulo ojo", "eye level", "altura de ojos"]}, {"id": "F56", "symbol": "⊛₅", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Angulo-bajo", "meaning": "Ángulo bajo (cámara abajo)", "expand_es": "ángulo bajo", "expand_en": "low camera angle", "keywords": ["angulo bajo", "desde abajo", "low angle"]}, {"id": "F57", "symbol": "⊛₆", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Angulo-alto", "meaning": "Ángulo alto (cámara arriba)", "expand_es": "ángulo alto", "expand_en": "high camera angle", "keywords": ["angulo alto", "desde arriba", "high angle"]}, {"id": "F58", "symbol": "⊛₇", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Lente-50mm", "meaning": "Look de lente ~50mm", "expand_es": "óptica tipo 50mm", "expand_en": "50mm lens look", "keywords": ["50mm", "lente 50", "fifty mm"]}, {"id": "F59", "symbol": "⊛₈", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Lente-85mm", "meaning": "Look de lente ~85mm retrato", "expand_es": "óptica tipo 85mm de retrato", "expand_en": "85mm portrait lens look", "keywords": ["85mm", "lente 85", "portrait lens"]}, {"id": "F60", "symbol": "⊛₉", "family": "camara", "family_label": "Encuadre / cámara / lente", "name": "Profundidad", "meaning": "Poca profundidad de campo / bokeh", "expand_es": "poca profundidad de campo, fondo desenfocado (bokeh)", "expand_en": "shallow depth of field, bokeh background", "keywords": ["profundidad", "bokeh", "desenfoque fondo", "shallow dof", "poca profundidad"]}, {"id": "F61", "symbol": "⊠₀", "family": "luz", "family_label": "Iluminación", "name": "Luz-natural", "meaning": "Iluminación natural", "expand_es": "iluminación natural", "expand_en": "natural lighting", "keywords": ["luz natural", "iluminacion natural", "natural light", "luz del dia"]}, {"id": "F62", "symbol": "⊠₁", "family": "luz", "family_label": "Iluminación", "name": "Atardecer", "meaning": "Luz de atardecer / golden hour", "expand_es": "luz de atardecer / golden hour", "expand_en": "sunset / golden hour lighting", "keywords": ["atardecer", "sunset", "golden hour", "hora dorada", "ocaso"]}, {"id": "F63", "symbol": "⊠₂", "family": "luz", "family_label": "Iluminación", "name": "Estudio-suave", "meaning": "Luz de estudio suave", "expand_es": "luz de estudio suave", "expand_en": "soft studio lighting", "keywords": ["estudio suave", "soft studio", "luz estudio", "studio soft", "luz suave de estudio", "luz de estudio", "estudio luz", "suave de estudio"]}, {"id": "F64", "symbol": "⊠₃", "family": "luz", "family_label": "Iluminación", "name": "Rembrandt", "meaning": "Iluminación estilo Rembrandt", "expand_es": "iluminación Rembrandt", "expand_en": "Rembrandt lighting", "keywords": ["rembrandt"]}, {"id": "F65", "symbol": "⊠₄", "family": "luz", "family_label": "Iluminación", "name": "Luz-ventana", "meaning": "Luz entrando por ventana", "expand_es": "luz de ventana", "expand_en": "window light", "keywords": ["luz ventana", "window light", "luz de ventana"]}, {"id": "F66", "symbol": "⊠₅", "family": "luz", "family_label": "Iluminación", "name": "Contraluz", "meaning": "Contraluz / rim light", "expand_es": "contraluz o rim light", "expand_en": "backlight / rim light", "keywords": ["contraluz", "rim light", "backlight", "silueta luz"]}, {"id": "F67", "symbol": "⊠₆", "family": "luz", "family_label": "Iluminación", "name": "Luz-nublada", "meaning": "Luz suave de día nublado", "expand_es": "luz suave de día nublado", "expand_en": "soft overcast daylight", "keywords": ["nublado", "overcast", "luz difusa cielo"]}, {"id": "F68", "symbol": "⊠₇", "family": "luz", "family_label": "Iluminación", "name": "Neon-urbano", "meaning": "Neón urbano tasteful (no club explícito)", "expand_es": "iluminación neón urbana tasteful", "expand_en": "tasteful urban neon lighting", "keywords": ["neon", "neón", "luces neon", "urban neon"]}, {"id": "F69", "symbol": "⊠₈", "family": "luz", "family_label": "Iluminación", "name": "Alto-contraste", "meaning": "Iluminación de alto contraste", "expand_es": "iluminación de alto contraste", "expand_en": "high-contrast lighting", "keywords": ["alto contraste", "high contrast", "luz dura"]}, {"id": "F70", "symbol": "⊠₉", "family": "luz", "family_label": "Iluminación", "name": "Bajo-contraste", "meaning": "Iluminación suave de bajo contraste", "expand_es": "iluminación suave de bajo contraste", "expand_en": "soft low-contrast lighting", "keywords": ["bajo contraste", "low contrast", "luz suave plana"]}, {"id": "F71", "symbol": "▣₀", "family": "fondo", "family_label": "Fondo / escenario", "name": "Fondo-neutro", "meaning": "Fondo neutro o color sólido limpio", "expand_es": "fondo neutro / color sólido limpio", "expand_en": "neutral or clean solid backdrop", "keywords": ["fondo neutro", "fondo solido", "backdrop neutro", "fondo blanco", "fondo gris"]}, {"id": "F72", "symbol": "▣₁", "family": "fondo", "family_label": "Fondo / escenario", "name": "Estudio", "meaning": "Escenario de estudio fotográfico", "expand_es": "fondo de estudio fotográfico", "expand_en": "photo studio backdrop", "keywords": ["estudio", "studio backdrop", "estudio foto", "fondo estudio", "fondo de estudio", "a estudio"]}, {"id": "F73", "symbol": "▣₂", "family": "fondo", "family_label": "Fondo / escenario", "name": "Calle-urbana", "meaning": "Calle o entorno urbano", "expand_es": "fondo de calle urbana", "expand_en": "urban street background", "keywords": ["calle", "urbana", "street", "ciudad fondo", "acera"]}, {"id": "F74", "symbol": "▣₃", "family": "fondo", "family_label": "Fondo / escenario", "name": "Interior-casa", "meaning": "Interior de casa / departamento", "expand_es": "interior de casa", "expand_en": "home interior background", "keywords": ["interior casa", "casa", "departamento", "living", "hogar"]}, {"id": "F75", "symbol": "▣₄", "family": "fondo", "family_label": "Fondo / escenario", "name": "Parque", "meaning": "Parque o vegetación exterior", "expand_es": "fondo de parque / vegetación", "expand_en": "park / outdoor greenery background", "keywords": ["parque", "jardin", "jardin", "vegetacion", "arboles", "outdoor green"]}, {"id": "F76", "symbol": "▣₅", "family": "fondo", "family_label": "Fondo / escenario", "name": "Cafe", "meaning": "Café o coffee shop", "expand_es": "fondo de café / coffee shop", "expand_en": "café / coffee shop background", "keywords": ["cafe", "cafeteria", "coffee shop", "coffee"]}, {"id": "F77", "symbol": "▣₆", "family": "fondo", "family_label": "Fondo / escenario", "name": "Playa", "meaning": "Playa tasteful", "expand_es": "fondo de playa", "expand_en": "beach background (tasteful)", "keywords": ["playa", "beach", "mar", "arena"]}, {"id": "F78", "symbol": "▣₇", "family": "fondo", "family_label": "Fondo / escenario", "name": "Oficina-escena", "meaning": "Escenario de oficina", "expand_es": "fondo de oficina", "expand_en": "office setting background", "keywords": ["oficina fondo", "office background", "escritorio", "oficina", "escenario oficina"]}, {"id": "F79", "symbol": "▣₈", "family": "fondo", "family_label": "Fondo / escenario", "name": "Difuminar-fondo", "meaning": "Difuminar o simplificar el fondo", "expand_es": "difuminar / simplificar el fondo", "expand_en": "blur or simplify the background", "keywords": ["difuminar fondo", "blur fondo", "simplificar fondo", "desenfocar fondo"]}, {"id": "F80", "symbol": "▣₉", "family": "fondo", "family_label": "Fondo / escenario", "name": "Cambiar-fondo", "meaning": "Reemplazar el fondo conservando al sujeto", "expand_es": "cambiar el fondo conservando al sujeto", "expand_en": "replace the background while keeping the subject", "keywords": ["cambiar fondo", "nuevo fondo", "reemplazar fondo", "replace background", "poner fondo", "fondo a", "cambiar el fondo"]}, {"id": "F81", "symbol": "⊗₀", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Piel-natural", "meaning": "Piel natural con textura real", "expand_es": "piel natural con textura real", "expand_en": "natural skin with real texture", "keywords": ["piel natural", "textura piel", "natural skin"]}, {"id": "F82", "symbol": "⊗₁", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Suavizar-leve", "meaning": "Suavizado leve de piel (no plástico)", "expand_es": "suavizado leve de piel, sin look plástico", "expand_en": "light skin smoothing, not plastic-looking", "keywords": ["suavizar piel", "soft skin", "piel suave", "retocar piel leve"]}, {"id": "F83", "symbol": "⊗₂", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Cabello-ordenado", "meaning": "Cabello peinado / ordenado", "expand_es": "cabello peinado y ordenado", "expand_en": "neat / styled hair", "keywords": ["cabello ordenado", "pelo peinado", "hair styled", "peinado"]}, {"id": "F84", "symbol": "⊗₃", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Cabello-suelto", "meaning": "Cabello suelto natural", "expand_es": "cabello suelto natural", "expand_en": "loose natural hair", "keywords": ["cabello suelto", "pelo suelto", "loose hair"]}, {"id": "F85", "symbol": "⊗₄", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Maquillaje-natural", "meaning": "Maquillaje natural discreto", "expand_es": "maquillaje natural discreto", "expand_en": "natural discreet makeup", "keywords": ["maquillaje natural", "makeup natural", "no makeup look"]}, {"id": "F86", "symbol": "⊗₅", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Maquillaje-editorial", "meaning": "Maquillaje editorial tasteful", "expand_es": "maquillaje editorial tasteful", "expand_en": "tasteful editorial makeup", "keywords": ["maquillaje editorial", "editorial makeup", "makeup moda"]}, {"id": "F87", "symbol": "⊗₆", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Ojos-definidos", "meaning": "Ojos definidos con claridad", "expand_es": "ojos definidos", "expand_en": "defined eyes", "keywords": ["ojos definidos", "ojos claros", "defined eyes"]}, {"id": "F88", "symbol": "⊗₇", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Labios-naturales", "meaning": "Labios con aspecto natural", "expand_es": "labios naturales", "expand_en": "natural-looking lips", "keywords": ["labios naturales", "natural lips"]}, {"id": "F89", "symbol": "⊗₈", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Quitar-manchas", "meaning": "Quitar solo manchas temporales / imperfecciones leves", "expand_es": "quitar solo manchas temporales o imperfecciones leves", "expand_en": "remove only temporary blemishes / light imperfections", "keywords": ["quitar manchas", "quitar granos", "quitar imperfecciones", "blemish"]}, {"id": "F90", "symbol": "⊗₉", "family": "retoque", "family_label": "Retoque / piel / cabello / maquillaje", "name": "Mantener-detalles", "meaning": "Conservar pecas, lunares y textura (anti-sobreedición)", "expand_es": "conservar pecas, lunares y textura de piel", "expand_en": "keep freckles, moles, and skin texture (anti-overedit)", "keywords": ["mantener detalles", "conservar pecas", "no sobreeditar", "keep freckles", "anti overedit"]}, {"id": "F91", "symbol": "◍₀", "family": "salida", "family_label": "Calidad / salida", "name": "Realismo-foto", "meaning": "Resultado fotorrealista", "expand_es": "resultado fotorrealista", "expand_en": "photorealistic result", "keywords": ["realismo", "fotorrealista", "photorealistic", "realista foto", "como foto"]}, {"id": "F92", "symbol": "◍₁", "family": "salida", "family_label": "Calidad / salida", "name": "Alta-resolucion", "meaning": "Alta resolución / detalle fino", "expand_es": "alta resolución, detalle fino", "expand_en": "high resolution, fine detail", "keywords": ["alta resolucion", "high resolution", "4k", "8k", "hires", "detalle fino"]}, {"id": "F93", "symbol": "◍₂", "family": "salida", "family_label": "Calidad / salida", "name": "Formato-vertical", "meaning": "Proporción vertical (p. ej. 9:16)", "expand_es": "formato vertical 9:16", "expand_en": "vertical aspect ratio 9:16", "keywords": ["vertical", "9:16", "formato vertical", "stories", "portrait ratio"]}, {"id": "F94", "symbol": "◍₃", "family": "salida", "family_label": "Calidad / salida", "name": "Formato-cuadrado", "meaning": "Proporción cuadrada 1:1", "expand_es": "formato cuadrado 1:1", "expand_en": "square aspect ratio 1:1", "keywords": ["cuadrado", "1:1", "square", "formato cuadrado"]}, {"id": "F95", "symbol": "◍₄", "family": "salida", "family_label": "Calidad / salida", "name": "Formato-horizontal", "meaning": "Proporción horizontal (p. ej. 16:9)", "expand_es": "formato horizontal 16:9", "expand_en": "horizontal aspect ratio 16:9", "keywords": ["horizontal", "16:9", "landscape", "formato horizontal", "widescreen"]}, {"id": "F96", "symbol": "◍₅", "family": "salida", "family_label": "Calidad / salida", "name": "Nitidez", "meaning": "Nitidez clara en el sujeto", "expand_es": "nitidez clara en el sujeto", "expand_en": "sharp focus on the subject", "keywords": ["nitidez", "nitido", "sharp", "enfoque nítido", "sharp focus"]}, {"id": "F97", "symbol": "◍₆", "family": "salida", "family_label": "Calidad / salida", "name": "Sin-artefactos", "meaning": "Sin artefactos de IA (dedos extra, deformaciones)", "expand_es": "sin artefactos de IA, sin dedos extra ni deformaciones", "expand_en": "no AI artifacts, no extra fingers or deformations", "keywords": ["sin artefactos", "no artifacts", "sin dedos extra", "sin deformaciones", "clean ai"]}, {"id": "F98", "symbol": "◍₇", "family": "salida", "family_label": "Calidad / salida", "name": "Consistencia", "meaning": "Consistencia con la foto de referencia", "expand_es": "consistencia visual con la referencia", "expand_en": "visual consistency with the reference photo", "keywords": ["consistencia", "consistency", "igual a referencia", "coherente con foto"]}, {"id": "F99", "symbol": "◍₈", "family": "salida", "family_label": "Calidad / salida", "name": "QC-ropa", "meaning": "Verificar que la ropa caiga y encaje de forma creíble", "expand_es": "verificar caída y encaje creíble de la ropa", "expand_en": "QC clothing fit and drape for realism", "keywords": ["qc ropa", "caida ropa", "encaje ropa", "fit clothing", "ropa creible"]}, {"id": "F100", "symbol": "◍₉", "family": "salida", "family_label": "Calidad / salida", "name": "Prompt-listo", "meaning": "Empaquetar el prompt final listo para el editor de imagen", "expand_es": "empaquetar prompt final listo para el modelo de imagen", "expand_en": "package the final prompt ready for the image model", "keywords": ["prompt listo", "listo para pegar", "final prompt", "empaquetar prompt"]}];
+const FAMILIES = [{"name": "identidad", "label": "Identidad / preservación", "base": "●"}, {"name": "ropa", "label": "Ropa / prendas", "base": "■"}, {"name": "estilo", "label": "Estilo de ropa", "base": "▲"}, {"name": "material", "label": "Materiales / texturas / colores", "base": "◆"}, {"name": "postura", "label": "Posturas / poses", "base": "⬢"}, {"name": "camara", "label": "Encuadre / cámara / lente", "base": "⊛"}, {"name": "luz", "label": "Iluminación", "base": "⊠"}, {"name": "fondo", "label": "Fondo / escenario", "base": "▣"}, {"name": "retoque", "label": "Retoque / piel / cabello / maquillaje", "base": "⊗"}, {"name": "salida", "label": "Calidad / salida", "base": "◍"}];
+
+const SUBS = "₀₁₂₃₄₅₆₇₈₉";
+const LS_FAVS = "f100_favs_v1";
+const LS_CHAIN = "f100_chain_v1";
+
+function norm(s) {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s#:/.-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 1400);
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast("Copiado");
+  } catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    toast("Copiado");
+  }
+}
+
+let chain = []; // array of {id, symbol, arg?}
+let activeFam = "all";
+
+function byId(id) { return CATALOG.find(c => c.id === id); }
+
+function renderChain() {
+  const box = document.getElementById("chainChips");
+  box.innerHTML = "";
+  if (!chain.length) {
+    box.innerHTML = '<span style="color:var(--muted)">Cadena vacía — agrega glifos</span>';
+  } else {
+    chain.forEach((item, idx) => {
+      const g = byId(item.id);
+      const el = document.createElement("span");
+      el.className = "chip";
+      const arg = item.arg ? `(${item.arg})` : "";
+      el.innerHTML = `${g.symbol}${arg} <button type="button" aria-label="Quitar" data-i="${idx}">×</button>`;
+      box.appendChild(el);
+    });
+    box.querySelectorAll("button[data-i]").forEach(btn => {
+      btn.onclick = () => { chain.splice(+btn.dataset.i, 1); syncOut(); };
+    });
+  }
+  localStorage.setItem(LS_CHAIN, JSON.stringify(chain));
+}
+
+function chainString() {
+  return chain.map(item => {
+    const g = byId(item.id);
+    return item.arg ? `${g.symbol}(${item.arg})` : g.symbol;
+  }).join(" ; ");
+}
+
+function expandEs() {
+  return chain.map(item => {
+    const g = byId(item.id);
+    let t = g.expand_es;
+    if (item.arg) t += `: ${item.arg}`;
+    return t;
+  }).join("; ");
+}
+
+function expandEn() {
+  return chain.map(item => {
+    const g = byId(item.id);
+    let t = g.expand_en;
+    if (item.arg) t += `: ${item.arg}`;
+    return t;
+  }).join("; ");
+}
+
+function syncOut() {
+  renderChain();
+  document.getElementById("chainText").textContent = chain.length ? chainString() : "—";
+  document.getElementById("esText").textContent = chain.length ? expandEs() : "—";
+  document.getElementById("enText").textContent = chain.length ? expandEn() : "—";
+}
+
+function addGlyph(id, arg) {
+  const g = byId(id);
+  if (!g) return;
+  // avoid immediate duplicate of same id+arg
+  const last = chain[chain.length - 1];
+  if (last && last.id === id && (last.arg || "") === (arg || "")) return;
+  chain.push({ id, arg: arg || null });
+  syncOut();
+}
+
+function clearChain() {
+  chain = [];
+  syncOut();
+}
+
+// Color extraction helper
+const COLOR_WORDS = [
+  "rojo","roja","azul","verde","negro","negra","blanco","blanca","beige","rosa","morado","morada",
+  "amarillo","amarilla","naranja","gris","dorado","dorada","plateado","plateada","burgundy","vino",
+  "navy","celeste","cafe","marron","crema","turquesa","lila","fucsia","coral","oliva","khaki",
+  "champagne","ivory","brown","red","blue","green","black","white","pink","purple","yellow",
+  "orange","gray","grey","gold","silver"
+];
+const COLOR_CANON = {
+  roja:"rojo", negra:"negro", blanca:"blanco", morada:"morado", amarilla:"amarillo",
+  dorada:"dorado", plateada:"plateado", cafe:"cafe", marron:"marron"
+};
+
+function hasToken(textN, token) {
+  const kn = norm(token);
+  if (!kn) return false;
+  // short tokens need boundaries to avoid "mar" in "smart", "arena" false pals, etc.
+  if (kn.length <= 4) {
+    return new RegExp("(?:^|\\s)" + kn.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&") + "(?:\\s|$)").test(textN);
+  }
+  return textN.includes(kn);
+}
+
+function extractColor(textN) {
+  for (const c of COLOR_WORDS) {
+    const cn = norm(c);
+    if (hasToken(textN, cn)) {
+      const base = COLOR_CANON[cn] || cn;
+      return base;
+    }
+  }
+  const m = textN.match(/#([0-9a-f]{3,8})/);
+  if (m) return "#" + m[1];
+  return null;
+}
+
+function extractArgFor(id, textN, original) {
+  // clothing + color
+  if (id === "F31") { // Color-solido
+    return extractColor(textN) || null;
+  }
+  if (["F11","F12","F13","F14","F15","F16","F17","F18","F19","F20"].includes(id)) {
+    const col = extractColor(textN);
+    return col || null;
+  }
+  if (id === "F09") { // Solo-cambiar
+    if (textN.includes("ropa") || textN.includes("vestido") || textN.includes("outfit")) return "ropa";
+    if (textN.includes("fondo")) return "fondo";
+    if (textN.includes("pose")) return "pose";
+    if (textN.includes("luz") || textN.includes("iluminacion")) return "luz";
+    return null;
+  }
+  if (id === "F80") { // Cambiar-fondo
+    // try after "fondo"
+    const m = original.match(/fondo\s+(?:a|de|en)?\s*([^,.;]+)/i);
+    if (m) return m[1].trim().slice(0, 40);
+    return null;
+  }
+  return null;
+}
+
+function matchText(raw) {
+  const textN = norm(raw);
+  const hits = [];
+  const notes = [];
+
+  // Priority boost phrases
+  const priority = [];
+
+  // Always useful defaults when talking about edits on a person
+  if (/(misma persona|same person|conservar persona|no cambiar persona)/.test(textN)) priority.push("F01");
+  if (/(misma cara|mismo rostro|same face)/.test(textN)) priority.push("F02");
+  if (/(mismo cuerpo|same body)/.test(textN)) priority.push("F03");
+  if (/(misma pose|mantener pose|pose original|keep pose)/.test(textN) && !/(cambiar pose|pose sentad|pose de pie|pose camin|pose editorial|pose relaj)/.test(textN)) priority.push("F04");
+  if (/(mismo fondo|mantener fondo|fondo original)/.test(textN) && !/(cambiar fondo|nuevo fondo|reemplazar fondo)/.test(textN)) priority.push("F05");
+  if (/(solo cambiar|cambiar solo|unicamente|solo la ropa)/.test(textN)) priority.push("F09");
+
+  // Score each glyph by keyword presence (longer keywords first)
+  const scored = [];
+  for (const g of CATALOG) {
+    let score = 0;
+    let bestKw = "";
+    const kws = (g.keywords || []).slice().sort((a,b) => b.length - a.length);
+    for (const kw of kws) {
+      const kn = norm(kw);
+      if (!kn) continue;
+      if (hasToken(textN, kn)) {
+        const boost = kn.length >= 6 ? 3 : (kn.length >= 4 ? 2 : 1);
+        if (boost + kn.length > score) {
+          score = boost + kn.length;
+          bestKw = kn;
+        }
+        break;
+      }
+    }
+    // name match
+    const nn = norm(g.name.replace(/-/g, " "));
+    if (nn && hasToken(textN, nn)) score = Math.max(score, 8 + nn.length);
+    // multi-word names only if the full phrase appears contiguously
+    if (!score && nn.includes(" ") && textN.includes(nn)) score = Math.max(score, 7 + nn.length);
+    if (score > 0) scored.push({ g, score, bestKw });
+  }
+
+  scored.sort((a,b) => b.score - a.score);
+
+  const chosen = new Map(); // id -> arg
+  function take(id, arg) {
+    if (chosen.has(id)) return;
+    chosen.set(id, arg || extractArgFor(id, textN, raw));
+  }
+
+  for (const id of priority) take(id);
+
+  // Color solid if a color word appears with clothing/color intent
+  const col = extractColor(textN);
+  if (col && /(vestido|camisa|blusa|pantalon|falda|chaqueta|abrigo|sueter|ropa|color|outfit)/.test(textN)) {
+    take("F31", col);
+  }
+
+  // Prefer smarter style when both casual and smart-casual hit
+  const hitIds = new Set(scored.map(s => s.g.id));
+  if (hitIds.has("F28") && hitIds.has("F21")) {
+    // drop plain casual from scored
+    for (let i = scored.length - 1; i >= 0; i--) if (scored[i].g.id === "F21") scored.splice(i, 1);
+  }
+  // "luz ... estudio" / "estudio suave" => F63
+  if (/(luz|iluminacion)/.test(textN) && /estudio/.test(textN)) {
+    priority.push("F63");
+  }
+  // "mantener pose" already; if changing fondo, prefer F80 + maybe F72
+  if (/(cambiar fondo|fondo a estudio|nuevo fondo|reemplazar fondo)/.test(textN)) {
+    priority.push("F80");
+    if (/estudio/.test(textN)) priority.push("F72");
+  }
+  // re-take priority that may have been appended late
+  for (const id of priority) take(id);
+
+  for (const { g } of scored) {
+    if (chosen.size >= 12) break;
+    take(g.id);
+  }
+  // If office style and word oficina, prefer office scene over unrelated backgrounds
+  if (chosen.has("F29") || /\boficina\b/.test(textN)) {
+    if (/oficina/.test(textN)) take("F78");
+    // remove beach/cafe false positives if oficina present
+    chosen.delete("F76");
+    chosen.delete("F77");
+  }
+  // urbano/urbana style
+  if (/\burbano\b|\burbana\b|streetwear/.test(textN)) take("F25");
+
+  // Soft defaults for photo-edit quality if any clothing/style found
+  const ids = [...chosen.keys()];
+  const hasClothes = ids.some(id => id >= "F11" && id <= "F40");
+  const hasPerson = ids.includes("F01") || /(persona|foto|editar|cambia)/.test(textN);
+  if (hasClothes && hasPerson && !ids.includes("F01")) {
+    // prepend identity if user talked about changing clothes on a person-ish request
+    if (/(misma|persona|referencia|foto)/.test(textN)) {
+      const tmp = new Map([["F01", null], ...chosen]);
+      chosen.clear();
+      for (const [k,v] of tmp) chosen.set(k,v);
+    }
+  }
+  if ((hasClothes || ids.some(id => id >= "F41")) && !ids.includes("F91") && /(foto|realista|realismo)/.test(textN)) {
+    take("F91");
+  }
+
+  // Build ordered chain: family order
+  const order = ["identidad","ropa","estilo","material","postura","camara","luz","fondo","retoque","salida"];
+  const arranged = [];
+  for (const fam of order) {
+    for (const g of CATALOG.filter(c => c.family === fam)) {
+      if (chosen.has(g.id)) arranged.push({ id: g.id, arg: chosen.get(g.id) });
+    }
+  }
+
+  if (!arranged.length) {
+    notes.push("No encontré coincidencias claras. Prueba palabras como: misma persona, vestido, elegante, sentada, atardecer, fondo estudio.");
+  } else {
+    notes.push(`Detecté ${arranged.length} glifo(s). Puedes tocar más abajo para afinar.`);
+  }
+
+  return { arranged, notes };
+}
+
+function applyMatch() {
+  const raw = document.getElementById("want").value;
+  const { arranged, notes } = matchText(raw);
+  chain = arranged;
+  syncOut();
+  document.getElementById("matchNote").textContent = notes.join(" ");
+}
+
+// Expose for tests
+window.F100 = { norm, matchText, CATALOG, byId, extractColor };
+
+function renderFamilies() {
+  const tabs = document.getElementById("famTabs");
+  tabs.innerHTML = "";
+  const all = document.createElement("button");
+  all.type = "button"; all.className = "tab" + (activeFam === "all" ? " active" : "");
+  all.textContent = "Todos";
+  all.onclick = () => { activeFam = "all"; renderFamilies(); renderGlyphs(); };
+  tabs.appendChild(all);
+  FAMILIES.forEach(f => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "tab" + (activeFam === f.name ? " active" : "");
+    b.textContent = `${f.base} ${f.label.split(" / ")[0]}`;
+    b.onclick = () => { activeFam = f.name; renderFamilies(); renderGlyphs(); };
+    tabs.appendChild(b);
+  });
+}
+
+function renderGlyphs() {
+  const q = norm(document.getElementById("search").value);
+  const grid = document.getElementById("glyphGrid");
+  grid.innerHTML = "";
+  const list = CATALOG.filter(g => {
+    if (activeFam !== "all" && g.family !== activeFam) return false;
+    if (!q) return true;
+    const blob = norm([g.id, g.symbol, g.name, g.meaning, g.expand_es, ...(g.keywords||[])].join(" "));
+    return blob.includes(q);
+  });
+  list.forEach(g => {
+    const el = document.createElement("div");
+    el.className = "glyph";
+    el.innerHTML = `<div class="sym">${g.symbol}</div><div class="meta"><b>${g.id} · ${g.name}</b><span>${g.meaning}</span></div><div class="add">+</div>`;
+    el.onclick = () => {
+      let arg = null;
+      if (g.id === "F31") {
+        const c = prompt("Color (ej. rojo, #c00):", "");
+        if (c) arg = c.trim();
+      }
+      addGlyph(g.id, arg);
+      toast("Agregado " + g.symbol);
+    };
+    grid.appendChild(el);
+  });
+  if (!list.length) grid.innerHTML = '<p>Sin resultados.</p>';
+}
+
+const PRESETS = [
+  {
+    title: "Vestido rojo elegante + atardecer",
+    text: "misma persona, cambia la ropa a vestido rojo elegante, pose sentada, luz de atardecer"
+  },
+  {
+    title: "Streetwear urbano de pie",
+    text: "misma persona, misma cara, ropa urbana streetwear, chaqueta negra, pose de pie, calle urbana, luz natural, fotorrealista"
+  },
+  {
+    title: "Oficina smart casual",
+    text: "misma persona, solo cambiar ropa a smart casual de oficina, blazer, plano medio, luz de ventana, fondo oficina, piel natural"
+  },
+  {
+    title: "Editorial minimalista estudio",
+    text: "misma persona, estilo minimalista, pose editorial, plano entero, luz de estudio suave, fondo neutro, alta resolucion, sin artefactos"
+  },
+  {
+    title: "Atrevido-refinado noche",
+    text: "misma persona, estilo atrevido refinado, vestido negro, pose relajada, luz neón urbana tasteful, formato vertical, realismo"
+  }
+];
+
+function renderPresets() {
+  const box = document.getElementById("presets");
+  box.innerHTML = "";
+  PRESETS.forEach(p => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "preset";
+    b.innerHTML = `<b>${p.title}</b><span style="color:var(--muted)">${p.text}</span>`;
+    b.onclick = () => {
+      document.getElementById("want").value = p.text;
+      applyMatch();
+      toast("Preset aplicado");
+    };
+    box.appendChild(b);
+  });
+}
+
+function loadFavs() {
+  try { return JSON.parse(localStorage.getItem(LS_FAVS) || "[]"); } catch { return []; }
+}
+function saveFavs(arr) { localStorage.setItem(LS_FAVS, JSON.stringify(arr)); }
+
+function renderFavs() {
+  const favs = loadFavs();
+  const box = document.getElementById("favs");
+  if (!favs.length) { box.textContent = "Sin favoritos aún."; return; }
+  box.innerHTML = "";
+  favs.forEach((f, i) => {
+    const row = document.createElement("div");
+    row.className = "fav-item";
+    row.innerHTML = `<code>${f.chain}</code>`;
+    const actions = document.createElement("div");
+    actions.className = "row";
+    const use = document.createElement("button");
+    use.type = "button"; use.textContent = "Usar";
+    use.onclick = () => { chain = f.items; syncOut(); toast("Cargado"); };
+    const del = document.createElement("button");
+    del.type = "button"; del.textContent = "Borrar";
+    del.onclick = () => { const a = loadFavs(); a.splice(i,1); saveFavs(a); renderFavs(); };
+    actions.appendChild(use); actions.appendChild(del);
+    row.appendChild(actions);
+    box.appendChild(row);
+  });
+}
+
+document.getElementById("btnMatch").onclick = applyMatch;
+document.getElementById("btnClearChain").onclick = clearChain;
+document.getElementById("btnCopyChain").onclick = () => copyText(chain.length ? chainString() : "");
+document.getElementById("btnCopyPrompt").onclick = () => {
+  if (!chain.length) return;
+  copyText(`ES: ${expandEs()}\n\nEN: ${expandEn()}`);
+};
+document.getElementById("btnCopyBoth").onclick = () => {
+  if (!chain.length) return;
+  copyText(`F100: ${chainString()}\n\nES: ${expandEs()}\n\nEN: ${expandEn()}\n\n(Nota: si el modelo no conoce F100, usa el prompt expandido o pega el diccionario.)`);
+};
+document.getElementById("btnSaveFav").onclick = () => {
+  if (!chain.length) { toast("Nada que guardar"); return; }
+  const favs = loadFavs();
+  favs.unshift({ chain: chainString(), items: chain, ts: Date.now() });
+  saveFavs(favs.slice(0, 30));
+  renderFavs();
+  toast("Guardado");
+};
+document.getElementById("btnAddColor").onclick = () => {
+  const c = prompt("Color para ◆₀ Color-sólido:", "rojo");
+  if (c) addGlyph("F31", c.trim());
+};
+document.getElementById("search").addEventListener("input", renderGlyphs);
+document.getElementById("want").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) applyMatch();
+});
+
+// restore chain
+try {
+  const saved = JSON.parse(localStorage.getItem(LS_CHAIN) || "[]");
+  if (Array.isArray(saved)) chain = saved;
+} catch {}
+
+renderFamilies();
+renderGlyphs();
+renderPresets();
+renderFavs();
+syncOut();
+</script>
+</body>
+</html>

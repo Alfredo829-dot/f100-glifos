@@ -1,0 +1,1938 @@
+{
+  "system": "F100",
+  "version": "1.0",
+  "locale": "es",
+  "created": "2026-11-08T22:57:00-06:00",
+  "purpose": "Abreviaturas visuales técnicas para prompts de edición de fotos (ropa, posturas, luz, fondo, retoque, salida). No son magia ni autorizaciones. Contenido tasteful: sin desnudez, sin menores, sin quitar ropa, sin suplantar personas reales.",
+  "rules": {
+    "mode_default": "describir prompt de edición",
+    "expand_before_send_to_image_model": true,
+    "other_models_need_dictionary": true,
+    "tasteful_only": true,
+    "no_nudity": true,
+    "no_minors": true,
+    "no_remove_clothes": true,
+    "no_real_person_impersonation": true,
+    "atrevido_means_fashion_forward_only": true,
+    "subscript_zero_not_priority": true,
+    "grammar_ops_not_in_catalog": true,
+    "descriptive_shortcuts_only": true
+  },
+  "grammar": {
+    "sequence": "A(args);B(args)",
+    "parallel": "par(A,B)",
+    "conditional": "si(cond,A,B)",
+    "repeat": "repetir(n,A)",
+    "note": "Operadores sintácticos; no son símbolos del catálogo F01-F100. Misma gramática que G100."
+  },
+  "bases_note": "Bases distintas a G100 (◯□△◇⬡⊙⊞⊟⊕◎) para evitar colisiones: ●■▲◆⬢⊛⊠▣⊗◍",
+  "families": [
+    {
+      "range": "F01-F10",
+      "base": "●",
+      "name": "identidad",
+      "label": "Identidad / preservación"
+    },
+    {
+      "range": "F11-F20",
+      "base": "■",
+      "name": "ropa",
+      "label": "Ropa / prendas"
+    },
+    {
+      "range": "F21-F30",
+      "base": "▲",
+      "name": "estilo",
+      "label": "Estilo de ropa"
+    },
+    {
+      "range": "F31-F40",
+      "base": "◆",
+      "name": "material",
+      "label": "Materiales / texturas / colores"
+    },
+    {
+      "range": "F41-F50",
+      "base": "⬢",
+      "name": "postura",
+      "label": "Posturas / poses"
+    },
+    {
+      "range": "F51-F60",
+      "base": "⊛",
+      "name": "camara",
+      "label": "Encuadre / cámara / lente"
+    },
+    {
+      "range": "F61-F70",
+      "base": "⊠",
+      "name": "luz",
+      "label": "Iluminación"
+    },
+    {
+      "range": "F71-F80",
+      "base": "▣",
+      "name": "fondo",
+      "label": "Fondo / escenario"
+    },
+    {
+      "range": "F81-F90",
+      "base": "⊗",
+      "name": "retoque",
+      "label": "Retoque / piel / cabello / maquillaje"
+    },
+    {
+      "range": "F91-F100",
+      "base": "◍",
+      "name": "salida",
+      "label": "Calidad / salida"
+    }
+  ],
+  "examples": [
+    "●₀ ; ●₈(ropa) ; ■₂(vestido rojo) ; ▲₁ ; ⊠₁ ; ◍₀",
+    "●₀ ; ●₁ ; ■₅ ; ▲₄ ; ⬢₁ ; ⊛₁ ; ⊠₂ ; ◍₂",
+    "●₀ ; ◆₀(negro) ; ▲₂ ; ⬢₈ ; ⊛₀ ; ⊠₀ ; ▣₂ ; ◍₀ ; ◍₆",
+    "par(■₂, ▲₁) ; ⊠₁ ; ▣₉(estudio) ; ⊗₀ ; ◍₀",
+    "●₃ ; si(quiere_cambiar_pose, ⬢₁, ●₃) ; ◍₇"
+  ],
+  "study_note": "Familia 1 fija identidad antes de editar. Familias 2-4 cubren prenda/estilo/material. 5-8 cubren pose/cámara/luz/fondo. 9 es retoque conservador. 10 cierra calidad y empaquetado. Preferir cadenas de 4-8 glifos. Expandir a prosa ES/EN antes de pegar en Gemini/ChatGPT/Grok Image.",
+  "count": 100,
+  "catalog": [
+    {
+      "id": "F01",
+      "symbol": "●₀",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 0,
+      "name": "Misma-persona",
+      "meaning": "Conservar la misma identidad de persona de la foto de referencia",
+      "expand_es": "misma persona, conservar identidad exacta del sujeto de referencia",
+      "expand_en": "same person, preserve exact identity of the reference subject",
+      "keywords": [
+        "misma persona",
+        "misma gente",
+        "identidad",
+        "same person",
+        "conservar persona",
+        "no cambiar persona"
+      ]
+    },
+    {
+      "id": "F02",
+      "symbol": "●₁",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 1,
+      "name": "Misma-cara",
+      "meaning": "Conservar los rasgos faciales exactos",
+      "expand_es": "misma cara, conservar rasgos faciales exactos",
+      "expand_en": "same face, keep exact facial features",
+      "keywords": [
+        "misma cara",
+        "mismo rostro",
+        "cara igual",
+        "rasgos",
+        "same face"
+      ]
+    },
+    {
+      "id": "F03",
+      "symbol": "●₂",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 2,
+      "name": "Mismo-cuerpo",
+      "meaning": "Conservar proporciones corporales del sujeto",
+      "expand_es": "mismo cuerpo, conservar proporciones corporales",
+      "expand_en": "same body, preserve body proportions",
+      "keywords": [
+        "mismo cuerpo",
+        "proporciones",
+        "cuerpo igual",
+        "same body"
+      ]
+    },
+    {
+      "id": "F04",
+      "symbol": "●₃",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 3,
+      "name": "Misma-pose",
+      "meaning": "Mantener la pose original de la foto",
+      "expand_es": "mantener la pose original",
+      "expand_en": "keep the original pose",
+      "keywords": [
+        "misma pose",
+        "mantener pose",
+        "pose original",
+        "keep pose",
+        "mantener la pose"
+      ]
+    },
+    {
+      "id": "F05",
+      "symbol": "●₄",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 4,
+      "name": "Mismo-fondo",
+      "meaning": "Mantener el fondo original sin reemplazarlo",
+      "expand_es": "mantener el fondo original",
+      "expand_en": "keep the original background",
+      "keywords": [
+        "mismo fondo",
+        "fondo original",
+        "mantener fondo",
+        "keep background"
+      ]
+    },
+    {
+      "id": "F06",
+      "symbol": "●₅",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 5,
+      "name": "Misma-edad",
+      "meaning": "Conservar la edad aparente del sujeto",
+      "expand_es": "conservar la edad aparente del sujeto",
+      "expand_en": "preserve the subject's apparent age",
+      "keywords": [
+        "misma edad",
+        "edad aparente",
+        "no rejuvenecer",
+        "no envejecer"
+      ]
+    },
+    {
+      "id": "F07",
+      "symbol": "●₆",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 6,
+      "name": "Mismo-gesto",
+      "meaning": "Conservar la expresión facial",
+      "expand_es": "conservar la expresión facial / gesto",
+      "expand_en": "keep the facial expression",
+      "keywords": [
+        "mismo gesto",
+        "misma expresion",
+        "expresion facial",
+        "sonrisa igual"
+      ]
+    },
+    {
+      "id": "F08",
+      "symbol": "●₇",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 7,
+      "name": "Misma-composicion",
+      "meaning": "Conservar encuadre y composición base",
+      "expand_es": "conservar el encuadre y la composición base",
+      "expand_en": "keep the base framing and composition",
+      "keywords": [
+        "misma composicion",
+        "mismo encuadre",
+        "composicion original"
+      ]
+    },
+    {
+      "id": "F09",
+      "symbol": "●₈",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 8,
+      "name": "Solo-cambiar",
+      "meaning": "Cambiar únicamente el elemento indicado; dejar el resto igual",
+      "expand_es": "cambiar solo el elemento indicado; dejar todo lo demás igual",
+      "expand_en": "change only the specified element; leave everything else unchanged",
+      "keywords": [
+        "solo cambiar",
+        "cambiar solo",
+        "unicamente",
+        "nothing else",
+        "solo la ropa",
+        "solo el fondo",
+        "solo cambiar el",
+        "cambia la ropa",
+        "cambiar la ropa"
+      ]
+    },
+    {
+      "id": "F10",
+      "symbol": "●₉",
+      "family": "identidad",
+      "family_label": "Identidad / preservación",
+      "base": "●",
+      "slot": 9,
+      "name": "Sin-persona-real",
+      "meaning": "No imitar ni suplantar a una celebridad o persona real conocida",
+      "expand_es": "no imitar ni suplantar a celebridades ni personas reales conocidas",
+      "expand_en": "do not impersonate celebrities or known real people",
+      "keywords": [
+        "sin celebridad",
+        "no persona real",
+        "no famosos",
+        "sin suplantar"
+      ]
+    },
+    {
+      "id": "F11",
+      "symbol": "■₀",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 0,
+      "name": "Camisa",
+      "meaning": "Prenda superior tipo camisa",
+      "expand_es": "usar camisa",
+      "expand_en": "wear a shirt",
+      "keywords": [
+        "camisa",
+        "shirt"
+      ]
+    },
+    {
+      "id": "F12",
+      "symbol": "■₁",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 1,
+      "name": "Blusa",
+      "meaning": "Prenda superior tipo blusa",
+      "expand_es": "usar blusa",
+      "expand_en": "wear a blouse",
+      "keywords": [
+        "blusa",
+        "blouse"
+      ]
+    },
+    {
+      "id": "F13",
+      "symbol": "■₂",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 2,
+      "name": "Vestido",
+      "meaning": "Prenda tipo vestido",
+      "expand_es": "usar vestido",
+      "expand_en": "wear a dress",
+      "keywords": [
+        "vestido",
+        "dress",
+        "un vestido",
+        "el vestido"
+      ]
+    },
+    {
+      "id": "F14",
+      "symbol": "■₃",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 3,
+      "name": "Pantalon",
+      "meaning": "Pantalón / jeans / trousers",
+      "expand_es": "usar pantalón",
+      "expand_en": "wear pants/trousers",
+      "keywords": [
+        "pantalon",
+        "pantalones",
+        "jeans",
+        "trousers",
+        "pants"
+      ]
+    },
+    {
+      "id": "F15",
+      "symbol": "■₄",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 4,
+      "name": "Falda",
+      "meaning": "Prenda tipo falda",
+      "expand_es": "usar falda",
+      "expand_en": "wear a skirt",
+      "keywords": [
+        "falda",
+        "skirt"
+      ]
+    },
+    {
+      "id": "F16",
+      "symbol": "■₅",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 5,
+      "name": "Chaqueta",
+      "meaning": "Chaqueta o blazer",
+      "expand_es": "usar chaqueta o blazer",
+      "expand_en": "wear a jacket or blazer",
+      "keywords": [
+        "chaqueta",
+        "blazer",
+        "jacket",
+        "saco"
+      ]
+    },
+    {
+      "id": "F17",
+      "symbol": "■₆",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 6,
+      "name": "Abrigo",
+      "meaning": "Abrigo o coat",
+      "expand_es": "usar abrigo",
+      "expand_en": "wear a coat",
+      "keywords": [
+        "abrigo",
+        "coat",
+        "gabardina"
+      ]
+    },
+    {
+      "id": "F18",
+      "symbol": "■₇",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 7,
+      "name": "Sueter",
+      "meaning": "Suéter, hoodie o sudadera",
+      "expand_es": "usar suéter o sudadera",
+      "expand_en": "wear a sweater or hoodie",
+      "keywords": [
+        "sueter",
+        "sudadera",
+        "hoodie",
+        "sweater",
+        "jersey"
+      ]
+    },
+    {
+      "id": "F19",
+      "symbol": "■₈",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 8,
+      "name": "Calzado",
+      "meaning": "Zapatos, tenis u otro calzado",
+      "expand_es": "usar calzado adecuado al estilo",
+      "expand_en": "wear footwear matching the style",
+      "keywords": [
+        "calzado",
+        "zapatos",
+        "tenis",
+        "botas",
+        "shoes",
+        "sneakers"
+      ]
+    },
+    {
+      "id": "F20",
+      "symbol": "■₉",
+      "family": "ropa",
+      "family_label": "Ropa / prendas",
+      "base": "■",
+      "slot": 9,
+      "name": "Accesorio",
+      "meaning": "Accesorio tasteful: bolsa, cinturón, bufanda, joyería discreta",
+      "expand_es": "añadir accesorio discreto (bolsa, cinturón, bufanda o joyería)",
+      "expand_en": "add a tasteful accessory (bag, belt, scarf, or discreet jewelry)",
+      "keywords": [
+        "accesorio",
+        "bolsa",
+        "cinturon",
+        "bufanda",
+        "collar",
+        "aretes",
+        "joyeria",
+        "bag",
+        "belt"
+      ]
+    },
+    {
+      "id": "F21",
+      "symbol": "▲₀",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 0,
+      "name": "Casual",
+      "meaning": "Estilo casual cotidiano",
+      "expand_es": "estilo de ropa casual cotidiano",
+      "expand_en": "casual everyday clothing style",
+      "keywords": [
+        "casual",
+        "diario",
+        "cotidiano",
+        "relajado ropa",
+        "estilo casual"
+      ]
+    },
+    {
+      "id": "F22",
+      "symbol": "▲₁",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 1,
+      "name": "Elegante",
+      "meaning": "Estilo elegante o formal",
+      "expand_es": "estilo de ropa elegante / formal",
+      "expand_en": "elegant / formal clothing style",
+      "keywords": [
+        "elegante",
+        "formal",
+        "fino",
+        "elegant",
+        "dressy"
+      ]
+    },
+    {
+      "id": "F23",
+      "symbol": "▲₂",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 2,
+      "name": "Atrevido-refinado",
+      "meaning": "Estilo fashion-forward refinado (no sexual ni explícito)",
+      "expand_es": "estilo atrevido-refinado, fashion-forward y pulido, sin contenido sexual",
+      "expand_en": "fashion-forward refined style, polished and daring in fashion sense only, non-sexual",
+      "keywords": [
+        "atrevido",
+        "atrevido refinado",
+        "fashion forward",
+        "audaz moda",
+        "moderno atrevido"
+      ]
+    },
+    {
+      "id": "F24",
+      "symbol": "▲₃",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 3,
+      "name": "Deportivo",
+      "meaning": "Estilo deportivo o athleisure",
+      "expand_es": "estilo deportivo / athleisure",
+      "expand_en": "sporty / athleisure style",
+      "keywords": [
+        "deportivo",
+        "sport",
+        "athleisure",
+        "gym",
+        "fitness ropa"
+      ]
+    },
+    {
+      "id": "F25",
+      "symbol": "▲₄",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 4,
+      "name": "Urbano",
+      "meaning": "Estilo urbano / streetwear",
+      "expand_es": "estilo urbano / streetwear",
+      "expand_en": "urban / streetwear style",
+      "keywords": [
+        "urbano",
+        "streetwear",
+        "street",
+        "city style",
+        "urbana",
+        "estilo urbano",
+        "ropa urbana"
+      ]
+    },
+    {
+      "id": "F26",
+      "symbol": "▲₅",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 5,
+      "name": "Minimalista",
+      "meaning": "Estilo minimalista limpio",
+      "expand_es": "estilo minimalista limpio",
+      "expand_en": "clean minimalist style",
+      "keywords": [
+        "minimalista",
+        "minimal",
+        "simple limpio"
+      ]
+    },
+    {
+      "id": "F27",
+      "symbol": "▲₆",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 6,
+      "name": "Vintage",
+      "meaning": "Estilo vintage o retro",
+      "expand_es": "estilo vintage / retro",
+      "expand_en": "vintage / retro style",
+      "keywords": [
+        "vintage",
+        "retro",
+        "ochentas",
+        "noventas",
+        "70s",
+        "80s",
+        "90s"
+      ]
+    },
+    {
+      "id": "F28",
+      "symbol": "▲₇",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 7,
+      "name": "Smart-casual",
+      "meaning": "Smart casual equilibrado",
+      "expand_es": "estilo smart casual",
+      "expand_en": "smart-casual style",
+      "keywords": [
+        "smart casual",
+        "semi formal",
+        "business casual",
+        "smart-casual",
+        "estilo smart"
+      ]
+    },
+    {
+      "id": "F29",
+      "symbol": "▲₈",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 8,
+      "name": "Oficina",
+      "meaning": "Estilo de oficina / business",
+      "expand_es": "estilo de oficina / business wear",
+      "expand_en": "office / business wear style",
+      "keywords": [
+        "oficina",
+        "business",
+        "trabajo ropa",
+        "corporativo"
+      ]
+    },
+    {
+      "id": "F30",
+      "symbol": "▲₉",
+      "family": "estilo",
+      "family_label": "Estilo de ropa",
+      "base": "▲",
+      "slot": 9,
+      "name": "Fiesta",
+      "meaning": "Estilo de fiesta o noche tasteful",
+      "expand_es": "estilo de fiesta / noche elegante y tasteful",
+      "expand_en": "tasteful party / evening wear style",
+      "keywords": [
+        "fiesta",
+        "noche",
+        "gala",
+        "cocktail",
+        "evening"
+      ]
+    },
+    {
+      "id": "F31",
+      "symbol": "◆₀",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 0,
+      "name": "Color-solido",
+      "meaning": "Color sólido indicado (usar argumento de color)",
+      "expand_es": "color sólido de la prenda según lo indicado",
+      "expand_en": "solid garment color as specified",
+      "keywords": [
+        "color solido",
+        "color ",
+        "rojo",
+        "azul",
+        "verde",
+        "negro",
+        "blanco",
+        "beige",
+        "rosa",
+        "morado",
+        "amarillo",
+        "naranja",
+        "gris",
+        "dorado",
+        "plateado",
+        "burgundy",
+        "vino",
+        "maroon",
+        "navy",
+        "celeste"
+      ]
+    },
+    {
+      "id": "F32",
+      "symbol": "◆₁",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 1,
+      "name": "Algodon",
+      "meaning": "Textura de algodón",
+      "expand_es": "tela de algodón",
+      "expand_en": "cotton fabric texture",
+      "keywords": [
+        "algodon",
+        "cotton"
+      ]
+    },
+    {
+      "id": "F33",
+      "symbol": "◆₂",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 2,
+      "name": "Denim",
+      "meaning": "Textura denim / mezclilla",
+      "expand_es": "tela denim / mezclilla",
+      "expand_en": "denim fabric",
+      "keywords": [
+        "denim",
+        "mezclilla",
+        "jean tela"
+      ]
+    },
+    {
+      "id": "F34",
+      "symbol": "◆₃",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 3,
+      "name": "Lana",
+      "meaning": "Textura de lana",
+      "expand_es": "tela de lana",
+      "expand_en": "wool fabric texture",
+      "keywords": [
+        "lana",
+        "wool",
+        "tejido lana"
+      ]
+    },
+    {
+      "id": "F35",
+      "symbol": "◆₄",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 4,
+      "name": "Seda",
+      "meaning": "Textura de seda",
+      "expand_es": "tela de seda",
+      "expand_en": "silk fabric texture",
+      "keywords": [
+        "seda",
+        "silk",
+        "satin",
+        "raso"
+      ]
+    },
+    {
+      "id": "F36",
+      "symbol": "◆₅",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 5,
+      "name": "Cuero",
+      "meaning": "Acabado tipo cuero de moda (no arma)",
+      "expand_es": "acabado de cuero fashion",
+      "expand_en": "fashion leather finish",
+      "keywords": [
+        "cuero",
+        "leather",
+        "piel sintetica"
+      ]
+    },
+    {
+      "id": "F37",
+      "symbol": "◆₆",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 6,
+      "name": "Estampado",
+      "meaning": "Estampado o print indicado",
+      "expand_es": "con estampado / print",
+      "expand_en": "with a print / pattern",
+      "keywords": [
+        "estampado",
+        "print",
+        "floral",
+        "rayas",
+        "cuadros",
+        "lunares",
+        "pattern"
+      ]
+    },
+    {
+      "id": "F38",
+      "symbol": "◆₇",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 7,
+      "name": "Textura-fina",
+      "meaning": "Detalle fino de textura de tela visible",
+      "expand_es": "textura fina de tela visible",
+      "expand_en": "fine visible fabric texture detail",
+      "keywords": [
+        "textura",
+        "tela detallada",
+        "fabric detail"
+      ]
+    },
+    {
+      "id": "F39",
+      "symbol": "◆₈",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 8,
+      "name": "Paleta",
+      "meaning": "Aplicar paleta de colores indicada",
+      "expand_es": "aplicar paleta de colores coherente",
+      "expand_en": "apply a coherent color palette",
+      "keywords": [
+        "paleta",
+        "palette",
+        "colores combinados",
+        "esquema de color"
+      ]
+    },
+    {
+      "id": "F40",
+      "symbol": "◆₉",
+      "family": "material",
+      "family_label": "Materiales / texturas / colores",
+      "base": "◆",
+      "slot": 9,
+      "name": "Contraste-color",
+      "meaning": "Enfatizar contraste de color entre prendas/fondo",
+      "expand_es": "enfatizar contraste de color",
+      "expand_en": "emphasize color contrast",
+      "keywords": [
+        "contraste color",
+        "contrast color",
+        "colores contrastantes"
+      ]
+    },
+    {
+      "id": "F41",
+      "symbol": "⬢₀",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 0,
+      "name": "De-pie",
+      "meaning": "Pose de pie",
+      "expand_es": "pose de pie",
+      "expand_en": "standing pose",
+      "keywords": [
+        "de pie",
+        "parado",
+        "standing",
+        "ponerse de pie"
+      ]
+    },
+    {
+      "id": "F42",
+      "symbol": "⬢₁",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 1,
+      "name": "Sentado",
+      "meaning": "Pose sentada",
+      "expand_es": "pose sentada",
+      "expand_en": "sitting pose",
+      "keywords": [
+        "sentado",
+        "sentada",
+        "sitting",
+        "silla"
+      ]
+    },
+    {
+      "id": "F43",
+      "symbol": "⬢₂",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 2,
+      "name": "Caminando",
+      "meaning": "Pose caminando / mid-stride",
+      "expand_es": "pose caminando",
+      "expand_en": "walking / mid-stride pose",
+      "keywords": [
+        "caminando",
+        "camina",
+        "walking",
+        "paseando"
+      ]
+    },
+    {
+      "id": "F44",
+      "symbol": "⬢₃",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 3,
+      "name": "Tres-cuartos",
+      "meaning": "Giro corporal de tres cuartos",
+      "expand_es": "cuerpo en tres cuartos",
+      "expand_en": "three-quarter body turn",
+      "keywords": [
+        "tres cuartos",
+        "3/4",
+        "three quarter"
+      ]
+    },
+    {
+      "id": "F45",
+      "symbol": "⬢₄",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 4,
+      "name": "Perfil",
+      "meaning": "Pose de perfil",
+      "expand_es": "pose de perfil",
+      "expand_en": "profile pose",
+      "keywords": [
+        "perfil",
+        "de lado",
+        "profile",
+        "side view"
+      ]
+    },
+    {
+      "id": "F46",
+      "symbol": "⬢₅",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 5,
+      "name": "Mirada-camara",
+      "meaning": "Mirando a la cámara",
+      "expand_es": "mirando a la cámara",
+      "expand_en": "looking at the camera",
+      "keywords": [
+        "mirada camara",
+        "mirando a la camara",
+        "looking at camera",
+        "ojos a camara"
+      ]
+    },
+    {
+      "id": "F47",
+      "symbol": "⬢₆",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 6,
+      "name": "Mirada-lado",
+      "meaning": "Mirada hacia un lado",
+      "expand_es": "mirada hacia un lado",
+      "expand_en": "looking to the side",
+      "keywords": [
+        "mirada lado",
+        "mirando al lado",
+        "looking away",
+        "mirada fuera"
+      ]
+    },
+    {
+      "id": "F48",
+      "symbol": "⬢₇",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 7,
+      "name": "Manos-naturales",
+      "meaning": "Manos en posición natural, sin rarezas",
+      "expand_es": "manos en pose natural, sin deformaciones",
+      "expand_en": "natural hand placement, no deformities",
+      "keywords": [
+        "manos naturales",
+        "manos normales",
+        "natural hands"
+      ]
+    },
+    {
+      "id": "F49",
+      "symbol": "⬢₈",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 8,
+      "name": "Pose-editorial",
+      "meaning": "Pose editorial de moda",
+      "expand_es": "pose editorial de moda",
+      "expand_en": "editorial fashion pose",
+      "keywords": [
+        "pose editorial",
+        "editorial",
+        "fashion pose",
+        "moda pose"
+      ]
+    },
+    {
+      "id": "F50",
+      "symbol": "⬢₉",
+      "family": "postura",
+      "family_label": "Posturas / poses",
+      "base": "⬢",
+      "slot": 9,
+      "name": "Pose-relajada",
+      "meaning": "Pose relajada y natural",
+      "expand_es": "pose relajada y natural",
+      "expand_en": "relaxed natural pose",
+      "keywords": [
+        "pose relajada",
+        "relajado",
+        "natural pose",
+        "chill pose"
+      ]
+    },
+    {
+      "id": "F51",
+      "symbol": "⊛₀",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 0,
+      "name": "Plano-entero",
+      "meaning": "Plano entero / cuerpo completo",
+      "expand_es": "plano entero, cuerpo completo",
+      "expand_en": "full-body shot",
+      "keywords": [
+        "plano entero",
+        "cuerpo completo",
+        "full body",
+        "de pies a cabeza"
+      ]
+    },
+    {
+      "id": "F52",
+      "symbol": "⊛₁",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 1,
+      "name": "Plano-medio",
+      "meaning": "Plano medio (cintura arriba)",
+      "expand_es": "plano medio",
+      "expand_en": "medium shot (waist up)",
+      "keywords": [
+        "plano medio",
+        "medium shot",
+        "cintura arriba"
+      ]
+    },
+    {
+      "id": "F53",
+      "symbol": "⊛₂",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 2,
+      "name": "Primer-plano",
+      "meaning": "Primer plano de rostro / bust",
+      "expand_es": "primer plano",
+      "expand_en": "close-up (face / upper body)",
+      "keywords": [
+        "primer plano",
+        "close up",
+        "closeup",
+        "retrato cercano"
+      ]
+    },
+    {
+      "id": "F54",
+      "symbol": "⊛₃",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 3,
+      "name": "Plano-americano",
+      "meaning": "Plano americano (rodillas arriba)",
+      "expand_es": "plano americano",
+      "expand_en": "cowboy / American shot (knees up)",
+      "keywords": [
+        "plano americano",
+        "american shot",
+        "rodillas arriba"
+      ]
+    },
+    {
+      "id": "F55",
+      "symbol": "⊛₄",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 4,
+      "name": "Angulo-ojo",
+      "meaning": "Ángulo a la altura de los ojos",
+      "expand_es": "ángulo a la altura de los ojos",
+      "expand_en": "eye-level camera angle",
+      "keywords": [
+        "angulo ojo",
+        "eye level",
+        "altura de ojos"
+      ]
+    },
+    {
+      "id": "F56",
+      "symbol": "⊛₅",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 5,
+      "name": "Angulo-bajo",
+      "meaning": "Ángulo bajo (cámara abajo)",
+      "expand_es": "ángulo bajo",
+      "expand_en": "low camera angle",
+      "keywords": [
+        "angulo bajo",
+        "desde abajo",
+        "low angle"
+      ]
+    },
+    {
+      "id": "F57",
+      "symbol": "⊛₆",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 6,
+      "name": "Angulo-alto",
+      "meaning": "Ángulo alto (cámara arriba)",
+      "expand_es": "ángulo alto",
+      "expand_en": "high camera angle",
+      "keywords": [
+        "angulo alto",
+        "desde arriba",
+        "high angle"
+      ]
+    },
+    {
+      "id": "F58",
+      "symbol": "⊛₇",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 7,
+      "name": "Lente-50mm",
+      "meaning": "Look de lente ~50mm",
+      "expand_es": "óptica tipo 50mm",
+      "expand_en": "50mm lens look",
+      "keywords": [
+        "50mm",
+        "lente 50",
+        "fifty mm"
+      ]
+    },
+    {
+      "id": "F59",
+      "symbol": "⊛₈",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 8,
+      "name": "Lente-85mm",
+      "meaning": "Look de lente ~85mm retrato",
+      "expand_es": "óptica tipo 85mm de retrato",
+      "expand_en": "85mm portrait lens look",
+      "keywords": [
+        "85mm",
+        "lente 85",
+        "portrait lens"
+      ]
+    },
+    {
+      "id": "F60",
+      "symbol": "⊛₉",
+      "family": "camara",
+      "family_label": "Encuadre / cámara / lente",
+      "base": "⊛",
+      "slot": 9,
+      "name": "Profundidad",
+      "meaning": "Poca profundidad de campo / bokeh",
+      "expand_es": "poca profundidad de campo, fondo desenfocado (bokeh)",
+      "expand_en": "shallow depth of field, bokeh background",
+      "keywords": [
+        "profundidad",
+        "bokeh",
+        "desenfoque fondo",
+        "shallow dof",
+        "poca profundidad"
+      ]
+    },
+    {
+      "id": "F61",
+      "symbol": "⊠₀",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 0,
+      "name": "Luz-natural",
+      "meaning": "Iluminación natural",
+      "expand_es": "iluminación natural",
+      "expand_en": "natural lighting",
+      "keywords": [
+        "luz natural",
+        "iluminacion natural",
+        "natural light",
+        "luz del dia"
+      ]
+    },
+    {
+      "id": "F62",
+      "symbol": "⊠₁",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 1,
+      "name": "Atardecer",
+      "meaning": "Luz de atardecer / golden hour",
+      "expand_es": "luz de atardecer / golden hour",
+      "expand_en": "sunset / golden hour lighting",
+      "keywords": [
+        "atardecer",
+        "sunset",
+        "golden hour",
+        "hora dorada",
+        "ocaso"
+      ]
+    },
+    {
+      "id": "F63",
+      "symbol": "⊠₂",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 2,
+      "name": "Estudio-suave",
+      "meaning": "Luz de estudio suave",
+      "expand_es": "luz de estudio suave",
+      "expand_en": "soft studio lighting",
+      "keywords": [
+        "estudio suave",
+        "soft studio",
+        "luz estudio",
+        "studio soft",
+        "luz suave de estudio",
+        "luz de estudio",
+        "estudio luz",
+        "suave de estudio"
+      ]
+    },
+    {
+      "id": "F64",
+      "symbol": "⊠₃",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 3,
+      "name": "Rembrandt",
+      "meaning": "Iluminación estilo Rembrandt",
+      "expand_es": "iluminación Rembrandt",
+      "expand_en": "Rembrandt lighting",
+      "keywords": [
+        "rembrandt"
+      ]
+    },
+    {
+      "id": "F65",
+      "symbol": "⊠₄",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 4,
+      "name": "Luz-ventana",
+      "meaning": "Luz entrando por ventana",
+      "expand_es": "luz de ventana",
+      "expand_en": "window light",
+      "keywords": [
+        "luz ventana",
+        "window light",
+        "luz de ventana"
+      ]
+    },
+    {
+      "id": "F66",
+      "symbol": "⊠₅",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 5,
+      "name": "Contraluz",
+      "meaning": "Contraluz / rim light",
+      "expand_es": "contraluz o rim light",
+      "expand_en": "backlight / rim light",
+      "keywords": [
+        "contraluz",
+        "rim light",
+        "backlight",
+        "silueta luz"
+      ]
+    },
+    {
+      "id": "F67",
+      "symbol": "⊠₆",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 6,
+      "name": "Luz-nublada",
+      "meaning": "Luz suave de día nublado",
+      "expand_es": "luz suave de día nublado",
+      "expand_en": "soft overcast daylight",
+      "keywords": [
+        "nublado",
+        "overcast",
+        "luz difusa cielo"
+      ]
+    },
+    {
+      "id": "F68",
+      "symbol": "⊠₇",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 7,
+      "name": "Neon-urbano",
+      "meaning": "Neón urbano tasteful (no club explícito)",
+      "expand_es": "iluminación neón urbana tasteful",
+      "expand_en": "tasteful urban neon lighting",
+      "keywords": [
+        "neon",
+        "neón",
+        "luces neon",
+        "urban neon"
+      ]
+    },
+    {
+      "id": "F69",
+      "symbol": "⊠₈",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 8,
+      "name": "Alto-contraste",
+      "meaning": "Iluminación de alto contraste",
+      "expand_es": "iluminación de alto contraste",
+      "expand_en": "high-contrast lighting",
+      "keywords": [
+        "alto contraste",
+        "high contrast",
+        "luz dura"
+      ]
+    },
+    {
+      "id": "F70",
+      "symbol": "⊠₉",
+      "family": "luz",
+      "family_label": "Iluminación",
+      "base": "⊠",
+      "slot": 9,
+      "name": "Bajo-contraste",
+      "meaning": "Iluminación suave de bajo contraste",
+      "expand_es": "iluminación suave de bajo contraste",
+      "expand_en": "soft low-contrast lighting",
+      "keywords": [
+        "bajo contraste",
+        "low contrast",
+        "luz suave plana"
+      ]
+    },
+    {
+      "id": "F71",
+      "symbol": "▣₀",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 0,
+      "name": "Fondo-neutro",
+      "meaning": "Fondo neutro o color sólido limpio",
+      "expand_es": "fondo neutro / color sólido limpio",
+      "expand_en": "neutral or clean solid backdrop",
+      "keywords": [
+        "fondo neutro",
+        "fondo solido",
+        "backdrop neutro",
+        "fondo blanco",
+        "fondo gris"
+      ]
+    },
+    {
+      "id": "F72",
+      "symbol": "▣₁",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 1,
+      "name": "Estudio",
+      "meaning": "Escenario de estudio fotográfico",
+      "expand_es": "fondo de estudio fotográfico",
+      "expand_en": "photo studio backdrop",
+      "keywords": [
+        "estudio",
+        "studio backdrop",
+        "estudio foto",
+        "fondo estudio",
+        "fondo de estudio",
+        "a estudio"
+      ]
+    },
+    {
+      "id": "F73",
+      "symbol": "▣₂",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 2,
+      "name": "Calle-urbana",
+      "meaning": "Calle o entorno urbano",
+      "expand_es": "fondo de calle urbana",
+      "expand_en": "urban street background",
+      "keywords": [
+        "calle",
+        "urbana",
+        "street",
+        "ciudad fondo",
+        "acera"
+      ]
+    },
+    {
+      "id": "F74",
+      "symbol": "▣₃",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 3,
+      "name": "Interior-casa",
+      "meaning": "Interior de casa / departamento",
+      "expand_es": "interior de casa",
+      "expand_en": "home interior background",
+      "keywords": [
+        "interior casa",
+        "casa",
+        "departamento",
+        "living",
+        "hogar"
+      ]
+    },
+    {
+      "id": "F75",
+      "symbol": "▣₄",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 4,
+      "name": "Parque",
+      "meaning": "Parque o vegetación exterior",
+      "expand_es": "fondo de parque / vegetación",
+      "expand_en": "park / outdoor greenery background",
+      "keywords": [
+        "parque",
+        "jardin",
+        "jardin",
+        "vegetacion",
+        "arboles",
+        "outdoor green"
+      ]
+    },
+    {
+      "id": "F76",
+      "symbol": "▣₅",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 5,
+      "name": "Cafe",
+      "meaning": "Café o coffee shop",
+      "expand_es": "fondo de café / coffee shop",
+      "expand_en": "café / coffee shop background",
+      "keywords": [
+        "cafe",
+        "cafeteria",
+        "coffee shop",
+        "coffee"
+      ]
+    },
+    {
+      "id": "F77",
+      "symbol": "▣₆",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 6,
+      "name": "Playa",
+      "meaning": "Playa tasteful",
+      "expand_es": "fondo de playa",
+      "expand_en": "beach background (tasteful)",
+      "keywords": [
+        "playa",
+        "beach",
+        "mar",
+        "arena"
+      ]
+    },
+    {
+      "id": "F78",
+      "symbol": "▣₇",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 7,
+      "name": "Oficina-escena",
+      "meaning": "Escenario de oficina",
+      "expand_es": "fondo de oficina",
+      "expand_en": "office setting background",
+      "keywords": [
+        "oficina fondo",
+        "office background",
+        "escritorio",
+        "oficina",
+        "escenario oficina"
+      ]
+    },
+    {
+      "id": "F79",
+      "symbol": "▣₈",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 8,
+      "name": "Difuminar-fondo",
+      "meaning": "Difuminar o simplificar el fondo",
+      "expand_es": "difuminar / simplificar el fondo",
+      "expand_en": "blur or simplify the background",
+      "keywords": [
+        "difuminar fondo",
+        "blur fondo",
+        "simplificar fondo",
+        "desenfocar fondo"
+      ]
+    },
+    {
+      "id": "F80",
+      "symbol": "▣₉",
+      "family": "fondo",
+      "family_label": "Fondo / escenario",
+      "base": "▣",
+      "slot": 9,
+      "name": "Cambiar-fondo",
+      "meaning": "Reemplazar el fondo conservando al sujeto",
+      "expand_es": "cambiar el fondo conservando al sujeto",
+      "expand_en": "replace the background while keeping the subject",
+      "keywords": [
+        "cambiar fondo",
+        "nuevo fondo",
+        "reemplazar fondo",
+        "replace background",
+        "poner fondo",
+        "fondo a",
+        "cambiar el fondo"
+      ]
+    },
+    {
+      "id": "F81",
+      "symbol": "⊗₀",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 0,
+      "name": "Piel-natural",
+      "meaning": "Piel natural con textura real",
+      "expand_es": "piel natural con textura real",
+      "expand_en": "natural skin with real texture",
+      "keywords": [
+        "piel natural",
+        "textura piel",
+        "natural skin"
+      ]
+    },
+    {
+      "id": "F82",
+      "symbol": "⊗₁",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 1,
+      "name": "Suavizar-leve",
+      "meaning": "Suavizado leve de piel (no plástico)",
+      "expand_es": "suavizado leve de piel, sin look plástico",
+      "expand_en": "light skin smoothing, not plastic-looking",
+      "keywords": [
+        "suavizar piel",
+        "soft skin",
+        "piel suave",
+        "retocar piel leve"
+      ]
+    },
+    {
+      "id": "F83",
+      "symbol": "⊗₂",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 2,
+      "name": "Cabello-ordenado",
+      "meaning": "Cabello peinado / ordenado",
+      "expand_es": "cabello peinado y ordenado",
+      "expand_en": "neat / styled hair",
+      "keywords": [
+        "cabello ordenado",
+        "pelo peinado",
+        "hair styled",
+        "peinado"
+      ]
+    },
+    {
+      "id": "F84",
+      "symbol": "⊗₃",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 3,
+      "name": "Cabello-suelto",
+      "meaning": "Cabello suelto natural",
+      "expand_es": "cabello suelto natural",
+      "expand_en": "loose natural hair",
+      "keywords": [
+        "cabello suelto",
+        "pelo suelto",
+        "loose hair"
+      ]
+    },
+    {
+      "id": "F85",
+      "symbol": "⊗₄",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 4,
+      "name": "Maquillaje-natural",
+      "meaning": "Maquillaje natural discreto",
+      "expand_es": "maquillaje natural discreto",
+      "expand_en": "natural discreet makeup",
+      "keywords": [
+        "maquillaje natural",
+        "makeup natural",
+        "no makeup look"
+      ]
+    },
+    {
+      "id": "F86",
+      "symbol": "⊗₅",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 5,
+      "name": "Maquillaje-editorial",
+      "meaning": "Maquillaje editorial tasteful",
+      "expand_es": "maquillaje editorial tasteful",
+      "expand_en": "tasteful editorial makeup",
+      "keywords": [
+        "maquillaje editorial",
+        "editorial makeup",
+        "makeup moda"
+      ]
+    },
+    {
+      "id": "F87",
+      "symbol": "⊗₆",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 6,
+      "name": "Ojos-definidos",
+      "meaning": "Ojos definidos con claridad",
+      "expand_es": "ojos definidos",
+      "expand_en": "defined eyes",
+      "keywords": [
+        "ojos definidos",
+        "ojos claros",
+        "defined eyes"
+      ]
+    },
+    {
+      "id": "F88",
+      "symbol": "⊗₇",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 7,
+      "name": "Labios-naturales",
+      "meaning": "Labios con aspecto natural",
+      "expand_es": "labios naturales",
+      "expand_en": "natural-looking lips",
+      "keywords": [
+        "labios naturales",
+        "natural lips"
+      ]
+    },
+    {
+      "id": "F89",
+      "symbol": "⊗₈",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 8,
+      "name": "Quitar-manchas",
+      "meaning": "Quitar solo manchas temporales / imperfecciones leves",
+      "expand_es": "quitar solo manchas temporales o imperfecciones leves",
+      "expand_en": "remove only temporary blemishes / light imperfections",
+      "keywords": [
+        "quitar manchas",
+        "quitar granos",
+        "quitar imperfecciones",
+        "blemish"
+      ]
+    },
+    {
+      "id": "F90",
+      "symbol": "⊗₉",
+      "family": "retoque",
+      "family_label": "Retoque / piel / cabello / maquillaje",
+      "base": "⊗",
+      "slot": 9,
+      "name": "Mantener-detalles",
+      "meaning": "Conservar pecas, lunares y textura (anti-sobreedición)",
+      "expand_es": "conservar pecas, lunares y textura de piel",
+      "expand_en": "keep freckles, moles, and skin texture (anti-overedit)",
+      "keywords": [
+        "mantener detalles",
+        "conservar pecas",
+        "no sobreeditar",
+        "keep freckles",
+        "anti overedit"
+      ]
+    },
+    {
+      "id": "F91",
+      "symbol": "◍₀",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 0,
+      "name": "Realismo-foto",
+      "meaning": "Resultado fotorrealista",
+      "expand_es": "resultado fotorrealista",
+      "expand_en": "photorealistic result",
+      "keywords": [
+        "realismo",
+        "fotorrealista",
+        "photorealistic",
+        "realista foto",
+        "como foto"
+      ]
+    },
+    {
+      "id": "F92",
+      "symbol": "◍₁",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 1,
+      "name": "Alta-resolucion",
+      "meaning": "Alta resolución / detalle fino",
+      "expand_es": "alta resolución, detalle fino",
+      "expand_en": "high resolution, fine detail",
+      "keywords": [
+        "alta resolucion",
+        "high resolution",
+        "4k",
+        "8k",
+        "hires",
+        "detalle fino"
+      ]
+    },
+    {
+      "id": "F93",
+      "symbol": "◍₂",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 2,
+      "name": "Formato-vertical",
+      "meaning": "Proporción vertical (p. ej. 9:16)",
+      "expand_es": "formato vertical 9:16",
+      "expand_en": "vertical aspect ratio 9:16",
+      "keywords": [
+        "vertical",
+        "9:16",
+        "formato vertical",
+        "stories",
+        "portrait ratio"
+      ]
+    },
+    {
+      "id": "F94",
+      "symbol": "◍₃",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 3,
+      "name": "Formato-cuadrado",
+      "meaning": "Proporción cuadrada 1:1",
+      "expand_es": "formato cuadrado 1:1",
+      "expand_en": "square aspect ratio 1:1",
+      "keywords": [
+        "cuadrado",
+        "1:1",
+        "square",
+        "formato cuadrado"
+      ]
+    },
+    {
+      "id": "F95",
+      "symbol": "◍₄",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 4,
+      "name": "Formato-horizontal",
+      "meaning": "Proporción horizontal (p. ej. 16:9)",
+      "expand_es": "formato horizontal 16:9",
+      "expand_en": "horizontal aspect ratio 16:9",
+      "keywords": [
+        "horizontal",
+        "16:9",
+        "landscape",
+        "formato horizontal",
+        "widescreen"
+      ]
+    },
+    {
+      "id": "F96",
+      "symbol": "◍₅",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 5,
+      "name": "Nitidez",
+      "meaning": "Nitidez clara en el sujeto",
+      "expand_es": "nitidez clara en el sujeto",
+      "expand_en": "sharp focus on the subject",
+      "keywords": [
+        "nitidez",
+        "nitido",
+        "sharp",
+        "enfoque nítido",
+        "sharp focus"
+      ]
+    },
+    {
+      "id": "F97",
+      "symbol": "◍₆",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 6,
+      "name": "Sin-artefactos",
+      "meaning": "Sin artefactos de IA (dedos extra, deformaciones)",
+      "expand_es": "sin artefactos de IA, sin dedos extra ni deformaciones",
+      "expand_en": "no AI artifacts, no extra fingers or deformations",
+      "keywords": [
+        "sin artefactos",
+        "no artifacts",
+        "sin dedos extra",
+        "sin deformaciones",
+        "clean ai"
+      ]
+    },
+    {
+      "id": "F98",
+      "symbol": "◍₇",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 7,
+      "name": "Consistencia",
+      "meaning": "Consistencia con la foto de referencia",
+      "expand_es": "consistencia visual con la referencia",
+      "expand_en": "visual consistency with the reference photo",
+      "keywords": [
+        "consistencia",
+        "consistency",
+        "igual a referencia",
+        "coherente con foto"
+      ]
+    },
+    {
+      "id": "F99",
+      "symbol": "◍₈",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 8,
+      "name": "QC-ropa",
+      "meaning": "Verificar que la ropa caiga y encaje de forma creíble",
+      "expand_es": "verificar caída y encaje creíble de la ropa",
+      "expand_en": "QC clothing fit and drape for realism",
+      "keywords": [
+        "qc ropa",
+        "caida ropa",
+        "encaje ropa",
+        "fit clothing",
+        "ropa creible"
+      ]
+    },
+    {
+      "id": "F100",
+      "symbol": "◍₉",
+      "family": "salida",
+      "family_label": "Calidad / salida",
+      "base": "◍",
+      "slot": 9,
+      "name": "Prompt-listo",
+      "meaning": "Empaquetar el prompt final listo para el editor de imagen",
+      "expand_es": "empaquetar prompt final listo para el modelo de imagen",
+      "expand_en": "package the final prompt ready for the image model",
+      "keywords": [
+        "prompt listo",
+        "listo para pegar",
+        "final prompt",
+        "empaquetar prompt"
+      ]
+    }
+  ]
+}
